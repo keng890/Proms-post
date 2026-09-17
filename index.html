@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบสอบถาม Prompt Post</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>P</text></svg>">
+</head>
+<body>
+  <div class="container">
+
+    <header class="brand-header">
+      <div class="brand-logo-wrap">
+        <div class="logo-badge">P</div>
+        <div class="brand-title">
+          <h1>Prompt Post</h1>
+          <span>Document Less, Live More</span>
+        </div>
+      </div>
+      <a href="admin.html" class="admin-entry-btn">🔒 Admin</a>
+    </header>
+
+    <div class="hero-card" id="hero-banner">
+      <span class="hero-tag">สำรวจความคิดเห็นคนรุ่นใหม่</span>
+      <h2>พฤติกรรมการใช้ชีวิตและจัดการเอกสารสำคัญในยุคดิจิทัล</h2>
+      <p>ร่วมแชร์ประสบการณ์เพื่อนำไปพัฒนาบริการ <strong>Prompt Post</strong> ให้ตอบโจทย์นักศึกษา คนเริ่มทำงาน และคนรุ่นใหม่มากยิ่งขึ้น</p>
+      <div class="privacy-notice">
+        <span>🔒</span>
+        <span><strong>เป็นความลับ</strong> แบบสอบถามนี้ไม่เก็บชื่อ-นามสกุลหรืออีเมล</span>
+      </div>
+    </div>
+
+    <div class="progress-wrapper" id="progress-wrapper">
+      <div class="progress-info">
+        <span id="step-label">ส่วนที่ 1 จาก 9: Screening & Demographics</span>
+        <span id="step-percent">11%</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar"></div></div>
+    </div>
+
+    <form id="survey-form">
+
+      <!-- 1 -->
+      <div class="card survey-step" data-step="1">
+        <span class="q-badge">ส่วนที่ 1 / 9</span>
+        <h3 class="q-title">Screening & Demographics</h3>
+        <p class="q-subtitle">กรุณาตอบคำถามเพื่อคัดกรองกลุ่มเป้าหมาย</p>
+
+        <div class="question-block">
+          <p class="question-title">1. ปัจจุบันท่านมีอายุเท่าใด? <span>*</span></p>
+          <div class="options-list" data-name="ageGroup" data-required="true">
+            <div class="option-item terminate-option" onclick="selectSingle(this)" data-terminate="true"><div class="option-radio"></div><div class="option-text">น้อยกว่า 21 ปี <small>(จบการสำรวจ)</small></div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">21 – 23 ปี</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">24 – 25 ปี</div></div>
+            <div class="option-item terminate-option" onclick="selectSingle(this)" data-terminate="true"><div class="option-radio"></div><div class="option-text">มากกว่า 25 ปี <small>(จบการสำรวจ)</small></div></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">2. สถานภาพปัจจุบันของท่านตรงกับข้อใดมากที่สุด? <span>*</span></p>
+          <div class="options-list" data-name="status" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">นักศึกษาที่กำลังฝึกงาน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">นักศึกษาปีสุดท้าย (กำลังจะสำเร็จการศึกษา)</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เพิ่งเริ่มทำงาน/บัณฑิตจบใหม่ (ทำงานไม่เกิน 1 ปี)</div></div>
+            <div class="option-item terminate-option" onclick="selectSingle(this)" data-terminate="true"><div class="option-radio"></div><div class="option-text">ทำงานมาแล้วมากกว่า 1 ปี <small>(จบการสำรวจ)</small></div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="status-other" placeholder="ระบุสถานภาพ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">3. รูปแบบการอยู่อาศัยในปัจจุบันของท่านคือข้อใด? <span>*</span></p>
+          <div class="options-list" data-name="livingType" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">พักอาศัยกับครอบครัว</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เช่าหอพัก / คอนโดมิเนียม</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">บ้านส่วนตัว / คอนโดส่วนตัว</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="living-other" placeholder="ระบุรูปแบบการอยู่อาศัย" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-primary" onclick="handleStep1Next()">ถัดไป →</button></div>
+      </div>
+
+      <!-- 2 -->
+      <div class="card survey-step" data-step="2" style="display:none;">
+        <span class="q-badge">ส่วนที่ 2 / 9</span>
+        <h3 class="q-title">Behavior & Pain Points</h3>
+        <p class="q-subtitle">สำรวจพฤติกรรมและความยุ่งยากเดิมจากการจัดการเอกสาร</p>
+
+        <div class="question-block">
+          <p class="question-title">1. ในช่วงสมัครงาน หรือเริ่มต้นทำงาน ท่านพบความยุ่งยากในการจัดการ "เอกสารประเภทใด" มากที่สุด? <span>*</span></p>
+          <p class="helper">(เลือกได้มากกว่า 1 ข้อ)</p>
+          <div class="options-list" data-name="painDocs" data-type="multi" data-required="true">
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารการศึกษา (เช่น Transcript, ใบคาดว่าจะจบ, ใบปริญญาบัตร)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารส่วนตัว/สัญญาเช่า (เช่น สำเนาบัตรประชาชน, ทะเบียนบ้าน, สัญญาเช่าหอ/คอนโด)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารการเงิน/บิลค่าใช้จ่าย (เช่น สลิปเงินเดือน, บิลค่าน้ำ/ค่าไฟ, สลิปโอนเงิน)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารการสมัครงานอื่นๆ (เช่น Resume, พอร์ตโฟลิโอ, ใบรับรองการฝึกงาน)</div></div>
+            <div class="option-item other-option" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="pain-other" placeholder="ระบุเอกสารอื่นๆ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">2. ท่านเคยประสบปัญหาเอกสารสำคัญสูญหาย หรือค้นหาไม่พบเมื่อต้องนำมาใช้งานด่วนหรือไม่ อย่างไร? <span>*</span></p>
+          <div class="options-list" data-name="lostDocExp" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ไม่เคยประสบปัญหา</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เคยประสบปัญหา</div><input type="text" class="inline-input" id="lost-doc-detail" placeholder="เช่น หา Transcript ไม่เจอตอนสัมภาษณ์งาน / ลืมสัญญาเช่า" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">3. โดยเฉลี่ยแล้ว ท่านต้องเสียเวลาไปกับการ "ขอเอกสารใหม่ / ปริ้นท์ / สแกนเอกสารซ้ำๆ" มากน้อยเพียงใด? <span>*</span></p>
+          <p class="helper"><strong>ด้านเวลา</strong></p>
+          <div class="options-list" data-name="wasteTime" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">น้อยกว่า 30 นาที/เดือน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">1–2 ชั่วโมง/เดือน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">มากกว่า 2 ชั่วโมง/เดือน</div></div>
+          </div>
+          <p class="helper"><strong>ด้านค่าใช้จ่าย (ค่าธรรมเนียม/ค่าปริ้นท์)</strong></p>
+          <div class="options-list" data-name="wasteMoney" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">น้อยกว่า 100 บาท/เดือน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">100–300 บาท/เดือน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">มากกว่า 300 บาท/เดือน</div></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(2)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" onclick="nextStep(2)">ถัดไป →</button></div>
+      </div>
+
+      <!-- 3 -->
+      <div class="card survey-step" data-step="3" style="display:none;">
+        <span class="q-badge">ส่วนที่ 3 / 9</span>
+        <h3 class="q-title">Hybrid Use Case & Value Proposition</h3>
+        <p class="q-subtitle">วัดความสนใจในการใช้งานแอปพลิเคชัน</p>
+
+        <div class="question-block">
+          <p class="question-title">1. หากมีแอปพลิเคชันที่สามารถช่วยจัดการและส่งต่อเอกสารสำคัญ (เช่น Transcript, เอกสารฝึกงาน ฯลฯ) ครบจบในที่เดียว และสามารถตรวจสอบความถูกต้องของเอกสารได้ทันที ท่านมีความต้องการให้มีฟีเจอร์ใดบ้างในแอปพลิเคชันนี้? <span>*</span></p>
+          <div class="options-list" data-name="hybridFeatureInterest" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">รับ–ส่งเอกสารออนไลน์อย่างปลอดภัย — ส่งเอกสารผ่านระบบออนไลน์ได้ง่ายและปลอดภัย หากผู้รับไม่เปิดอ่านภายในเวลาที่กำหนด ระบบสามารถพิมพ์เอกสารและส่งทางไปรษณีย์ให้อัตโนมัติ</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เซ็นเอกสารออนไลน์ได้อย่างถูกต้องและน่าเชื่อถือ — สามารถเซ็นชื่อและประทับตราเอกสารแบบดิจิทัล พร้อมบันทึกวันและเวลาการเซ็น เพื่อช่วยยืนยันว่าเอกสารมีการลงนามจริงและสามารถตรวจสอบย้อนหลังได้</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">กระเป๋าเก็บเอกสารดิจิทัล — เก็บเอกสารสำคัญไว้ในรูปแบบดิจิทัล และสามารถตรวจสอบความถูกต้องของเอกสารได้ทันที โดยยืนยันตัวตนผ่าน ThaID</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เก็บเอกสารและจ่ายเงินได้ในแอปเดียว — มีพื้นที่เก็บเอกสารออนไลน์ที่จัดเป็นหมวดหมู่ ช่วยให้ค้นหาเอกสารได้ง่าย พร้อมทั้งสามารถรับแจ้งหนี้และชำระค่าธรรมเนียมออนไลน์ได้ภายในแอปเดียว</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">โหวตออนไลน์และส่งความรู้สึกดี ๆ ผ่านโปสการ์ด — สามารถร่วมโหวตผ่านระบบออนไลน์ที่ตรวจสอบได้ และยังสามารถส่งโปสการ์ดออนไลน์ เพื่อส่งคำอวยพรหรือความรู้สึกดี ๆ ให้คนอื่นในเทศกาลต่าง ๆ ได้</div></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">2. "เหตุผลสำคัญที่สุด" ที่จะทำให้ท่านตัดสินใจเปิดใช้งานแอปพลิเคชันนี้เป็นครั้งแรก? <span>*</span></p>
+          <div class="options-list" data-name="triggerReason" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ความสะดวก — จัดการเอกสารและบริการต่าง ๆ ได้ในแอปเดียว</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ประหยัดเวลา — ไม่ต้องเดินทางหรือจัดการเอกสารด้วยตัวเอง</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ความปลอดภัย — มั่นใจว่าเอกสารสำคัญไม่สูญหายและไม่ถูกปลอมแปลง</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ความน่าเชื่อถือ — ส่งต่อเอกสารทางการได้ทันที โดยมีระบบรับรองความถูกต้องที่ปลอดภัย</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ลดการใช้กระดาษ — รับ–ส่งเอกสารในรูปแบบดิจิทัล</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ลดค่าใช้จ่าย — ลดค่าเดินทางและค่าใช้จ่ายในการจัดการเอกสาร</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ยังไม่มีความจำเป็นต้องใช้งาน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="trigger-other" placeholder="ระบุเหตุผลอื่นๆ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">3. ท่านคาดว่าจะกลับมาใช้งานแอปพลิเคชั่นเมื่อใด? <span>*</span></p>
+          <div class="options-list" data-name="usageFrequency" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เมื่อต้องทำธุรกรรมสำคัญ: เช่น สมัครงาน, ยื่นเอกสารการศึกษา, ทำเรื่องกับหน่วยงาน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เมื่อมีเอกสารใหม่เข้ามา: เช่น สัญญาใหม่, บิลค่าใช้จ่าย, เอกสารทางการเงิน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ใช้งานประจำ: เพื่อจัดเก็บและอัปเดตเอกสารส่วนตัวอยู่เสมอ</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ใช้นานๆ ครั้ง: เฉพาะเวลาที่จำเป็นจริงๆ</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="usage-other" placeholder="ระบุช่วงเวลาหรือพฤติกรรมอื่นๆ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">4. หากแอปพลิเคชันนี้พร้อมใช้งาน ท่านมีแนวโน้มที่จะใช้เป็นประจำหรือไม่? <span>*</span></p>
+          <div class="options-list" data-name="regularUseIntent" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ใช้อย่างแน่นอน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">มีแนวโน้มจะใช้</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ยังไม่แน่ใจ</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">มีแนวโน้มจะไม่ใช้</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ไม่ใช้แน่นอน</div></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(3)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" onclick="nextStep(3)">ถัดไป →</button></div>
+      </div>
+
+      <!-- 4 -->
+      <div class="card survey-step" data-step="4" style="display:none;">
+        <span class="q-badge">ส่วนที่ 4 / 9</span>
+        <h3 class="q-title">Pain to Solution Connection</h3>
+        <p class="q-subtitle">การตอบโจทย์ปัญหาของผู้ใช้งาน</p>
+
+        <div class="question-block">
+          <p class="question-title">1. หากแอปพลิเคชันนี้สามารถแก้ปัญหาเรื่องเอกสารได้ทั้งหมด บริการนี้จะช่วยตอบโจทย์ในการใช้ชีวิตประจำวันของท่านในมิติใดมากที่สุด? <span>*</span></p>
+          <div class="options-list" data-name="lifeDimension" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">Live Faster: สะดวก รวดเร็ว ทุกธุรกรรมจบได้ ในไม่กี่ขั้นตอน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">Live Smarter: ยกระดับคุณภาพชีวิตด้วยนวัตกรรมที่ทันสมัย</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">Live Safer: ปลอดภัยในทุกการทำธุรกรรม</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">Live Greener: ลดการใช้ทรัพยากรกระดาษ เพื่อโลกที่ยั่งยืน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">Live Happier: สร้างความสุขในทุกไลฟ์สไตล์ยุคดิจิทัล</div></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(4)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" onclick="nextStep(4)">ถัดไป →</button></div>
+      </div>
+
+      <!-- 5 -->
+      <div class="card survey-step" data-step="5" style="display:none;">
+        <span class="q-badge">ส่วนที่ 5 / 9</span>
+        <h3 class="q-title">Target & Marketing Channels</h3>
+        <p class="q-subtitle">พฤติกรรมและช่องทางการรับรู้สื่อ</p>
+
+        <div class="question-block">
+          <p class="question-title">1. ปกติคุณค้นหา หรือรับข้อมูลเกี่ยวกับแอปพลิเคชัน/เครื่องมือใหม่ๆ จากช่องทางใดบ่อยที่สุด? <span>*</span></p>
+          <p class="helper">(เลือกได้สูงสุด 2 ข้อ)</p>
+          <div class="options-list" data-name="mediaChannels" data-type="multi" data-max="2" data-required="true">
+            <div class="option-item" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">Facebook</div></div>
+            <div class="option-item" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">Instagram</div></div>
+            <div class="option-item" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">TikTok</div></div>
+            <div class="option-item" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">YouTube Shorts</div></div>
+            <div class="option-item" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">X (Twitter)</div></div>
+            <div class="option-item" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">การค้นหาบน Google / บล็อกรีวิว</div></div>
+            <div class="option-item" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">คำแนะนำจากเพื่อน / คนรู้จัก</div></div>
+            <div class="option-item other-option" onclick="selectMultiple(this,2)"><div class="option-checkbox">✓</div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="media-other" placeholder="ระบุช่องทางอื่นๆ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(5)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" onclick="nextStep(5)">ถัดไป →</button></div>
+      </div>
+
+      <!-- 6 -->
+      <div class="card survey-step" data-step="6" style="display:none;">
+        <span class="q-badge">ส่วนที่ 6 / 9</span>
+        <h3 class="q-title">Conversion & Pricing Intent</h3>
+        <p class="q-subtitle">โอกาสในการเปลี่ยนเป็นผู้ใช้งานจริง</p>
+
+        <div class="question-block">
+          <p class="question-title">1. อะไรคือปัจจัยสำคัญที่สุดที่จะทำให้คุณตัดสินใจ "ดาวน์โหลด" หรือ "ทดลองใช้" แอปพลิเคชันนี้? <span>*</span></p>
+          <div class="options-list" data-name="downloadFactors" data-type="multi" data-required="true">
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">มีเวอร์ชั่นให้ทดลองใช้งานฟรี (Free Trial)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">แอปช่วยแก้ปัญหาที่ฉันพบได้จริง</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">ช่วยประหยัดเวลาในการจัดการเอกสารหรือข้อมูล</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">มั่นใจในความปลอดภัยและความเป็นส่วนตัวของข้อมูล</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">มีฟังก์ชันที่แตกต่างจากแอปอื่น</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">มีรีวิวหรือคะแนนการันตีจากผู้ใช้งานจริง</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">หน้าตาแอป (UI) ใช้งานง่าย ไม่ซับซ้อน</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">มีโปรโมชันส่วนลดพิเศษช่วงเปิดตัว</div></div>
+            <div class="option-item other-option" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="download-other" placeholder="ระบุปัจจัยอื่นๆ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">2. หากแอปพลิเคชันนี้มีฟีเจอร์ที่ช่วยแก้ปัญหาข้างต้นได้จริง คุณยินดีจ่ายค่าบริการรูปแบบใด? <span>*</span></p>
+          <div class="options-list" data-name="pricingModels" data-type="multi" data-required="true">
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">ใช้งานฟรี (ยอมดูโฆษณา)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">จ่ายรายเดือน (ราคาประหยัด)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">จ่ายรายปี (คุ้มค่ากว่า)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">ซื้อขาดครั้งเดียว (Lifetime Access)</div></div>
+            <div class="option-item other-option" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="pricing-other" placeholder="ระบุรูปแบบอื่นๆ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(6)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" onclick="nextStep(6)">ถัดไป →</button></div>
+      </div>
+
+      <!-- 7 -->
+      <div class="card survey-step" data-step="7" style="display:none;">
+        <span class="q-badge">ส่วนที่ 7 / 9</span>
+        <h3 class="q-title">Brand Awareness</h3>
+        <p class="q-subtitle">แนะนำแอปพลิเคชันและวัดการรับรู้แบรนด์</p>
+
+        <div class="feature-box">
+          <h4>📮 Prompt Post แอปที่จะมาช่วยจัดการเอกสารของคุณ</h4>
+          <p>ด้วยฟีเจอร์หลักที่จะช่วยให้ชีวิตคุณง่ายขึ้น ดังนี้:</p>
+          <ol>
+            <li><strong>Digital Postbox:</strong> ตู้จดหมายดิจิทัลประจำตัว จัดเก็บเอกสารการศึกษา ใบเสร็จ บิลค่าใช้จ่าย และเอกสารราชการไว้บนคลาวด์ ย้ายหอพักกี่ครั้งเอกสารก็ไม่สูญหาย</li>
+            <li><strong>VC Prompt Pass:</strong> ทรานสคริปต์ดิจิทัลและเอกสารสำคัญที่ตรวจสอบความถูกต้องได้ทันที ปลอมแปลงไม่ได้ ส่งสมัครงานออนไลน์ได้ในคลิกเดียว</li>
+            <li><strong>Trusted e-Signature:</strong> ลงลายมือชื่อดิจิทัลและเซ็นสัญญาเช่า/สัญญาจ้างที่มีผลตามกฎหมาย จบบนสมาร์ตโฟนทันที</li>
+            <li><strong>Storage & Payment - Digital Safebox:</strong> จัดเก็บเอกสารแยกหมวดหมู่บนคลาวด์ที่ปลอดภัย และระบบ e-Payment บริการแจ้งหนี้และชำระค่าธรรมเนียมเบ็ดเสร็จในแอปเดียว</li>
+            <li><strong>Lifestyle Services:</strong> ร่วมกิจกรรมโหวตอย่างโปร่งใส ตรวจสอบได้ผ่าน E Vote และบริการส่งมอบความรู้สึกดีๆ ทุกเทศกาลด้วยระบบ Postcard Online</li>
+          </ol>
+        </div>
+
+        <div class="question-block">
+          <p class="question-title">1. คุณเคยเห็นหรือเคยได้ยินชื่อแอปพลิเคชัน Prompt Post มาก่อนหรือไม่? <span>*</span></p>
+          <div class="options-list" data-name="brandAwareness" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เคยใช้งานอยู่ปัจจุบัน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">เคยเห็น/เคยได้ยินชื่อ แต่ยังไม่เคยใช้งาน</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ไม่เคยเห็น/ไม่เคยได้ยินมาก่อน</div></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(7)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" onclick="nextStep(7)">ถัดไป →</button></div>
+      </div>
+
+      <!-- 8 -->
+      <div class="card survey-step" data-step="8" style="display:none;">
+        <span class="q-badge">ส่วนที่ 8 / 9</span>
+        <h3 class="q-title">Value & Pain Point Relief</h3>
+        <p class="q-subtitle">ประเมินความสนใจและคุณค่าในการแก้ไขปัญหา</p>
+
+        <div class="question-block">
+          <p class="question-title">1. คุณคิดว่าฟีเจอร์ของ Prompt Post สามารถช่วยตอบโจทย์หรือแก้ปัญหาในชีวิตประจำวันของคุณได้มากน้อยเพียงใด? <span>*</span></p>
+          <div class="options-list" data-name="valueRelief" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ช่วยได้มากที่สุด (ตรงกับปัญหาที่พบอยู่พอดี)</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ช่วยได้ปานกลาง</div></div>
+            <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">ยังไม่ค่อยจำเป็นสำหรับฉันเท่าไร</div></div>
+          </div>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(8)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" onclick="nextStep(8)">ถัดไป →</button></div>
+      </div>
+
+      <!-- 9 -->
+      <div class="card survey-step" data-step="9" style="display:none;">
+        <span class="q-badge">ส่วนที่ 9 / 9</span>
+        <h3 class="q-title">Actionable Feedback</h3>
+        <p class="q-subtitle">การพัฒนาต่อ</p>
+
+        <div class="question-block">
+          <p class="question-title">1. หากคุณตัดสินใจทดลองใช้แอปนี้ หรือหากอยากให้แอปนี้ตอบโจทย์ชีวิตคุณได้ดียิ่งขึ้น คุณอยากให้มีฟีเจอร์อะไรเพิ่มเติม หรือมีความกังวลในเรื่องใดมากที่สุด?</p>
+          <p class="helper">คำตอบของคุณมีค่ามากสำหรับการพัฒนาแอปพลิเคชันให้ดียิ่งขึ้น</p>
+          <textarea class="custom-textarea" id="actionable-feedback" placeholder="พิมพ์ข้อเสนอแนะหรือข้อกังวลของคุณที่นี่..."></textarea>
+        </div>
+
+        <div class="step-actions"><button type="button" class="btn btn-secondary" onclick="prevStep(9)">← ย้อนกลับ</button><button type="button" class="btn btn-primary" id="btn-submit" onclick="submitSurvey()">ส่งคำตอบแบบสอบถาม ✓</button></div>
+      </div>
+    </form>
+
+    <div class="card success-card" id="terminate-screen" style="display:none;">
+      <div class="success-icon terminate-icon">×</div>
+      <h3>ขอขอบคุณสำหรับความสนใจของท่าน</h3>
+      <p>เนื่องจากแบบสำรวจนี้กำหนดกลุ่มเป้าหมายเฉพาะ จึงขอสิ้นสุดการสำรวจเพียงเท่านี้</p>
+    </div>
+
+    <div class="card success-card" id="success-screen" style="display:none;">
+      <div class="success-icon">✓</div>
+      <h3>บันทึกคำตอบเรียบร้อยแล้ว ขอบคุณครับ!</h3>
+      <p>ข้อมูลของคุณจะเป็นประโยชน์อย่างยิ่งต่อการพัฒนาบริการ Prompt Post ให้ตอบโจทย์คนรุ่นใหม่ได้ดียิ่งขึ้น</p>
+    </div>
+
+    <footer>
+      <p>© 2026 Prompt Post Survey Platform</p>
+    </footer>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/survey.js"></script>
+</body>
+</html>
