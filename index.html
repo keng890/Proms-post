@@ -100,7 +100,7 @@
             </div>
             <div class="option-item" onclick="selectSingle(this)" data-terminate="true">
               <div class="option-radio"></div>
-              <div class="option-text">ทำงานมาแล้วมากกว่า 1 ปี (Terminate/จบการสำรวจ)</div>
+              <div class="option-text">ทำงานมาแล้วมากกว่า 1 ปี </div>
             </div>
             <div class="option-item" onclick="selectSingle(this, true)">
               <div class="option-radio"></div>
@@ -254,47 +254,101 @@
         <h3 class="q-title">Hybrid Use Case & Value Proposition</h3>
         <p class="q-subtitle">วัดความสนใจในการใช้งานแอปพลิเคชัน</p>
 
-        <!-- ข้อ 3.1 -->
-        <div style="margin-bottom: 22px;">
-          <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">1. หากมีแอปพลิเคชันที่สามารถช่วยจัดการและส่งต่อเอกสารสำคัญ (เช่น Transcript, เอกสารฝึกงาน ฯลฯ ) ครบจบในที่เดียว และสามารถตรวจสอบความถูกต้องของเอกสารได้ทันที ท่านมีความต้องการให้มีฟีเจอร์ใดบ้างในแอปพลิเคชันนี้? *</p>
-          <div class="options-list" data-name="hybridFeatureInterest" data-type="multi" data-required="true">
-            <div class="option-item" onclick="selectMultiple(this)">
-              <div class="option-radio"></div>
-              <div>
-                <div class="option-text">รับ–ส่งเอกสารออนไลน์อย่างปลอดภัย</div>
-                <div class="option-desc">ส่งเอกสารผ่านระบบออนไลน์ได้ง่ายและปลอดภัย หากผู้รับไม่เปิดอ่านภายในเวลาที่กำหนด ระบบสามารถพิมพ์เอกสารและส่งทางไปรษณีย์ให้อัตโนมัติ</div>
-              </div>
-            </div>
-            <div class="option-item" onclick="selectSingle(this)">
-              <div class="option-radio"></div>
-              <div>
-                <div class="option-text">เซ็นเอกสารออนไลน์ได้อย่างถูกต้องและน่าเชื่อถือ</div>
-                <div class="option-desc">สามารถเซ็นชื่อและประทับตราเอกสารแบบดิจิทัล พร้อมบันทึกวันและเวลาการเซ็น เพื่อช่วยยืนยันว่าเอกสารมีการลงนามจริงและสามารถตรวจสอบย้อนหลังได้</div>
-              </div>
-            </div>
-            <div class="option-item" onclick="selectMultiple(this)">
-              <div class="option-radio"></div>
-              <div>
-                <div class="option-text">กระเป๋าเก็บเอกสารดิจิทัล</div>
-                <div class="option-desc">เก็บเอกสารสำคัญไว้ในรูปแบบดิจิทัล และสามารถตรวจสอบความถูกต้องของเอกสารได้ทันที โดยยืนยันตัวตนผ่าน ThaID</div>
-              </div>
-            </div>
-            <div class="option-item" onclick="selectSingle(this)">
-              <div class="option-radio"></div>
-              <div>
-                <div class="option-text">เก็บเอกสารและจ่ายเงินได้ในแอปเดียว</div>
-                <div class="option-desc">มีพื้นที่เก็บเอกสารออนไลน์ที่จัดเป็นหมวดหมู่ ช่วยให้ค้นหาเอกสารได้ง่าย พร้อมทั้งสามารถรับแจ้งหนี้และชำระค่าธรรมเนียมออนไลน์ ได้ภายในแอปเดียว</div>
-              </div>
-            </div>
-            <div class="option-item" onclick="selectSingle(this)">
-              <div class="option-radio"></div>
-              <div>
-                <div class="option-text">โหวตออนไลน์และส่งความรู้สึกดี ๆ ผ่านโปสการ์ด</div>
-                <div class="option-desc">สามารถร่วมโหวตผ่านระบบออนไลน์ที่ตรวจสอบได้ และยังสามารถส่งโปสการ์ดออนไลน์ เพื่อส่งคำอวยพรหรือความรู้สึกดี ๆ ให้คนอื่นในเทศกาลต่าง ๆ ได้</div>
-              </div>
-            </div>
-          </div>
+       <!-- ข้อ 3.1 -->
+<div style="margin-bottom: 22px;">
+  <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">
+    1. หากมีแอปพลิเคชันที่สามารถช่วยจัดการและส่งต่อเอกสารสำคัญ
+    (เช่น Transcript, เอกสารฝึกงาน ฯลฯ ) ครบจบในที่เดียว
+    และสามารถตรวจสอบความถูกต้องของเอกสารได้ทันที
+    ท่านมีความต้องการให้มีฟีเจอร์ใดบ้างในแอปพลิเคชันนี้? *
+  </p>
+
+  <!-- เลือกได้หลายข้อ -->
+  <div
+    class="options-list"
+    data-name="hybridFeatureInterest"
+    data-type="multi"
+    data-required="true"
+  >
+
+    <!-- ตัวเลือกที่ 1 -->
+    <div class="option-item" onclick="selectMultiple(this)">
+      <div class="option-checkbox">&#10003;</div>
+      <div>
+        <div class="option-text">
+          รับ–ส่งเอกสารออนไลน์อย่างปลอดภัย
         </div>
+        <div class="option-desc">
+          ส่งเอกสารผ่านระบบออนไลน์ได้ง่ายและปลอดภัย
+          หากผู้รับไม่เปิดอ่านภายในเวลาที่กำหนด
+          ระบบสามารถพิมพ์เอกสารและส่งทางไปรษณีย์ให้อัตโนมัติ
+        </div>
+      </div>
+    </div>
+
+    <!-- ตัวเลือกที่ 2 -->
+    <div class="option-item" onclick="selectMultiple(this)">
+      <div class="option-checkbox">&#10003;</div>
+      <div>
+        <div class="option-text">
+          เซ็นเอกสารออนไลน์ได้อย่างถูกต้องและน่าเชื่อถือ
+        </div>
+        <div class="option-desc">
+          สามารถเซ็นชื่อและประทับตราเอกสารแบบดิจิทัล
+          พร้อมบันทึกวันและเวลาการเซ็น เพื่อช่วยยืนยันว่าเอกสาร
+          มีการลงนามจริงและสามารถตรวจสอบย้อนหลังได้
+        </div>
+      </div>
+    </div>
+
+    <!-- ตัวเลือกที่ 3 -->
+    <div class="option-item" onclick="selectMultiple(this)">
+      <div class="option-checkbox">&#10003;</div>
+      <div>
+        <div class="option-text">
+          กระเป๋าเก็บเอกสารดิจิทัล
+        </div>
+        <div class="option-desc">
+          เก็บเอกสารสำคัญไว้ในรูปแบบดิจิทัล
+          และสามารถตรวจสอบความถูกต้องของเอกสารได้ทันที
+          โดยยืนยันตัวตนผ่าน ThaID
+        </div>
+      </div>
+    </div>
+
+    <!-- ตัวเลือกที่ 4 -->
+    <div class="option-item" onclick="selectMultiple(this)">
+      <div class="option-checkbox">&#10003;</div>
+      <div>
+        <div class="option-text">
+          เก็บเอกสารและจ่ายเงินได้ในแอปเดียว
+        </div>
+        <div class="option-desc">
+          มีพื้นที่เก็บเอกสารออนไลน์ที่จัดเป็นหมวดหมู่
+          ช่วยให้ค้นหาเอกสารได้ง่าย พร้อมทั้งสามารถรับแจ้งหนี้
+          และชำระค่าธรรมเนียมออนไลน์ได้ภายในแอปเดียว
+        </div>
+      </div>
+    </div>
+
+    <!-- ตัวเลือกที่ 5 -->
+    <div class="option-item" onclick="selectMultiple(this)">
+      <div class="option-checkbox">&#10003;</div>
+      <div>
+        <div class="option-text">
+          โหวตออนไลน์และส่งความรู้สึกดี ๆ ผ่านโปสการ์ด
+        </div>
+        <div class="option-desc">
+          สามารถร่วมโหวตผ่านระบบออนไลน์ที่ตรวจสอบได้
+          และยังสามารถส่งโปสการ์ดออนไลน์
+          เพื่อส่งคำอวยพรหรือความรู้สึกดี ๆ ให้คนอื่น
+          ในเทศกาลต่าง ๆ ได้
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
         <!-- ข้อ 3.2 -->
         <div style="margin-bottom: 22px;">
