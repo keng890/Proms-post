@@ -3,87 +3,261 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard | Prompt Post</title>
+  <title>Admin Analytics Dashboard | Prompt Post</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Password Gate Styles */
+    #password-gate {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, #002169 0%, #0F172A 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+    .password-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 38px 30px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      border-top: 5px solid var(--primary-red);
+    }
+    .password-badge {
+      width: 58px; height: 58px;
+      background: #FFF0ED;
+      color: var(--primary-red);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 16px;
+    }
+    .btn-delete-row {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1px solid #FCA5A5;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-delete-row:hover {
+      background: #DC2626;
+      color: #FFFFFF;
+    }
+  </style>
 </head>
-<body class="admin-page">
+<body>
 
-  <div id="password-gate" class="password-gate">
+  <!-- PASSWORD PROTECTION GATE (Password: 0637941837) -->
+  <div id="password-gate">
     <div class="password-card">
       <div class="password-badge">🔒</div>
-      <h2>Admin Dashboard</h2>
-      <p>กรุณากรอกรหัสผ่านเพื่อดูข้อมูลแบบสอบถามจริง</p>
+      <h2 style="font-size: 20px; color: var(--deep-navy); margin-bottom: 8px;">ระบบจัดการข้อมูลผลสำรวจ</h2>
+      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">
+        กรุณากรอกรหัสผ่านเพื่อเข้าสู่ Admin Analytics Dashboard
+      </p>
+      
       <form onsubmit="handlePasswordSubmit(event)">
-        <input type="password" id="admin-pass-input" class="modal-input" placeholder="กรอกรหัสผ่าน" required autofocus>
-        <div id="pass-error" class="pass-error">รหัสผ่านไม่ถูกต้อง</div>
-        <button class="btn btn-primary" type="submit">เข้าสู่ระบบ →</button>
+        <input type="password" id="admin-pass-input" class="modal-input" placeholder="กรอกรหัสผ่าน..." style="text-align: center; font-size: 16px; letter-spacing: 2px;" required autofocus>
+        <div id="pass-error" style="color: #EF4444; font-size: 13px; margin-top: -10px; margin-bottom: 14px; display: none;">
+          รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          เข้าสู่ระบบ &rarr;
+        </button>
       </form>
-      <a href="index.html" class="back-link">← กลับหน้าแบบสอบถาม</a>
+      <div style="margin-top: 16px;">
+        <a href="index.html" style="font-size: 13px; color: var(--text-muted); text-decoration: none;">&larr; กลับหน้าแบบสอบถาม</a>
+      </div>
     </div>
   </div>
 
-  <main id="admin-content" class="admin-container" style="display:none;">
+  <!-- MAIN ADMIN DASHBOARD CONTENT -->
+  <div class="admin-container" id="admin-content" style="display: none;">
+    
+    <!-- Header -->
     <header class="admin-header">
       <div>
-        <div class="admin-brand"><div class="logo-badge small">P</div><h1>Prompt Post · Admin Dashboard</h1></div>
-        <p class="admin-status">ข้อมูลจาก Google Sheets แบบเรียลไทม์ · อัปเดตล่าสุด: <span id="last-update">-</span></p>
+        <div class="brand-logo-wrap" style="margin-bottom: 6px;">
+          <div class="logo-badge" style="width: 36px; height: 36px; font-size: 18px;">P</div>
+          <h1 style="font-size: 22px; color: var(--deep-navy);">Prompt Post &bull; สรุปผลการสำรวจ (Real-Time)</h1>
+        </div>
+        <p style="font-size: 13.5px; color: var(--text-muted);">
+          ข้อมูลจริงจากผู้ตอบแบบสำรวจ &bull; อัปเดตล่าสุด: <span id="last-update">-</span>
+        </p>
       </div>
+
       <div class="admin-actions">
-        <a href="index.html" class="btn btn-secondary">← แบบสอบถาม</a>
-        <button class="btn btn-outline" onclick="openWebhookModal()">⚙️ ตั้งค่า Sheets</button>
-        <button class="btn btn-primary" onclick="refreshDashboard()">↻ รีเฟรช</button>
-        <button class="btn btn-outline danger-btn" onclick="clearAllData()">🗑️ ลบข้อมูลทั้งหมด</button>
-        <button class="btn btn-secondary" onclick="exportToCSV()">📥 Export CSV</button>
-        <button class="btn btn-secondary" onclick="logoutAdmin()">🔒 ออกจากระบบ</button>
+        <a href="index.html" class="btn btn-secondary" style="padding: 10px 16px; font-size: 13.5px;" target="_blank">
+          <span>&larr; เปิดหน้าแบบสอบถาม</span>
+        </a>
+        <button class="btn btn-outline" style="padding: 10px 16px; font-size: 13.5px;" onclick="openWebhookModal()">
+          ⚙️ ตั้งค่า Google Sheets
+        </button>
+        <button class="btn btn-primary" style="padding: 10px 16px; font-size: 13.5px;" onclick="exportToCSV()">
+          📥 Export CSV (Excel)
+        </button>
+        <button class="btn btn-secondary" style="padding: 10px 14px; font-size: 13px;" onclick="logoutAdmin()">
+          🔒 ล็อกเอาท์
+        </button>
       </div>
     </header>
 
-    <div id="connection-status" class="connection-status">กำลังเชื่อมต่อ Google Sheets...</div>
-
-    <section class="kpi-grid">
-      <div class="kpi-card"><span>ผู้ตอบทั้งหมด</span><strong id="kpi-total">0</strong><small>ข้อมูลจริงจาก Google Sheets</small></div>
-      <div class="kpi-card"><span>แนวโน้มใช้ประจำ</span><strong id="kpi-regular">0%</strong><small>ใช้อย่างแน่นอน + มีแนวโน้มจะใช้</small></div>
-      <div class="kpi-card"><span>ช่วยแก้ปัญหาได้มากที่สุด</span><strong id="kpi-relief">0%</strong><small>Value & Pain Point Relief</small></div>
-      <div class="kpi-card"><span>รับรู้แบรนด์</span><strong id="kpi-awareness">0%</strong><small>เคยเห็น/เคยได้ยิน/เคยใช้งาน</small></div>
-    </section>
-
-    <section class="charts-grid">
-      <div class="chart-card"><h3>ฟีเจอร์ที่ต้องการ</h3><div class="chart-wrapper"><canvas id="chartFeature"></canvas></div></div>
-      <div class="chart-card"><h3>ประเภทเอกสารที่มีปัญหา</h3><div class="chart-wrapper"><canvas id="chartPain"></canvas></div></div>
-      <div class="chart-card"><h3>ช่องทางการรับข้อมูล</h3><div class="chart-wrapper"><canvas id="chartMedia"></canvas></div></div>
-      <div class="chart-card"><h3>รูปแบบการจ่ายค่าบริการ</h3><div class="chart-wrapper"><canvas id="chartPricing"></canvas></div></div>
-      <div class="chart-card"><h3>เหตุผลเปิดใช้งานครั้งแรก</h3><div class="chart-wrapper"><canvas id="chartTrigger"></canvas></div></div>
-      <div class="chart-card"><h3>แนวโน้มใช้เป็นประจำ</h3><div class="chart-wrapper"><canvas id="chartRegular"></canvas></div></div>
-    </section>
-
-    <section class="table-card">
-      <div class="table-header">
-        <div><h3>ข้อมูลคำตอบจริง (Raw Responses)</h3><p>ระบบจะดึงข้อมูลจาก Google Sheets ทุก 10 วินาที</p></div>
-        <span id="record-count" class="record-count">0 records</span>
+    <!-- KPI Metrics Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">จำนวนผู้ตอบทั้งหมด</span>
+          <span class="kpi-icon">👥</span>
+        </div>
+        <div class="kpi-value" id="kpi-total">0</div>
+        <div class="kpi-sub">ข้อมูลจริงที่บันทึกในระบบ</div>
       </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">มีแนวโน้มใช้ประจำ (แน่นอน/มีแนวโน้ม)</span>
+          <span class="kpi-icon">⭐</span>
+        </div>
+        <div class="kpi-value" id="kpi-regular-intent" style="color: var(--primary-red);">0%</div>
+        <div class="kpi-sub">ส่วนที่ 3 ข้อ 4</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">ช่วยแก้ปัญหาชีวิตได้มากที่สุด</span>
+          <span class="kpi-icon">🎯</span>
+        </div>
+        <div class="kpi-value" id="kpi-value-relief" style="color: #10B981;">0%</div>
+        <div class="kpi-sub">ตรงกับปัญหาที่พบอยู่พอดี (ส่วนที่ 8)</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">ระดับการรับรู้แบรนด์ (Awareness)</span>
+          <span class="kpi-icon">📣</span>
+        </div>
+        <div class="kpi-value" id="kpi-awareness" style="color: var(--deep-navy);">0%</div>
+        <div class="kpi-sub">เคยเห็น / ได้ยินชื่อ / ใช้งาน (ส่วนที่ 7)</div>
+      </div>
+    </div>
+
+    <!-- Insights Key Takeaways Box -->
+    <div class="insights-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3>💡 สรุปประเด็นเชิงลึก (Key Consumer Insights)</h3>
+        <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="copyInsights()">คัดลอกข้อความสรุป</button>
+      </div>
+      <ul class="insights-list" id="insights-list">
+        <li>กำลังประมวลผลข้อมูล...</li>
+      </ul>
+    </div>
+
+    <!-- Interactive Charts Grid -->
+    <div class="charts-grid">
+      
+      <!-- Chart 1: Feature Needed (ส่วนที่ 3 ข้อ 1) -->
+      <div class="chart-card">
+        <h4 class="chart-title">1. ความต้องการฟีเจอร์ในแอป (ส่วนที่ 3 ข้อ 1)</h4>
+        <p class="chart-subtitle">ฟีเจอร์ที่ผู้ใช้ต้องการมากที่สุด</p>
+        <div class="chart-wrapper">
+          <canvas id="chartFeatureNeeded"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Document Pain Points (ส่วนที่ 2 ข้อ 1) -->
+      <div class="chart-card">
+        <h4 class="chart-title">2. ประเภทเอกสารที่ยุ่งยากที่สุด (ส่วนที่ 2 ข้อ 1)</h4>
+        <p class="chart-subtitle">เอกสารที่พบปัญหาตอนสมัครงานหรือเริ่มต้นทำงาน</p>
+        <div class="chart-wrapper">
+          <canvas id="chartPainPoints"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 3: Media Channels (ส่วนที่ 5) -->
+      <div class="chart-card">
+        <h4 class="chart-title">3. ช่องทางรับรู้สื่อและเครื่องมือใหม่ๆ (ส่วนที่ 5)</h4>
+        <p class="chart-subtitle">ช่องทางที่คนรุ่นใหม่ค้นหาหรือรับข้อมูล</p>
+        <div class="chart-wrapper">
+          <canvas id="chartMedia"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 4: Pricing Model (ส่วนที่ 6 ข้อ 2) -->
+      <div class="chart-card">
+        <h4 class="chart-title">4. รูปแบบค่าบริการที่ยินดีจ่าย (ส่วนที่ 6 ข้อ 2)</h4>
+        <p class="chart-subtitle">ฟรีดูโฆษณา / รายเดือน / รายปี / ซื้อขาด</p>
+        <div class="chart-wrapper">
+          <canvas id="chartPricing"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <h4 class="chart-title">ตารางข้อมูลคำตอบจริง (Raw Responses)</h4>
+          <p class="chart-subtitle" style="margin-bottom: 0;">สามารถกดปุ่ม <span style="color:#DC2626; font-weight:600;">"ลบ"</span> ในแต่ละแถวเพื่อลบคำตอบทดสอบออกได้ทันที</p>
+        </div>
+        <div>
+          <button class="btn btn-secondary" style="padding: 8px 14px; font-size: 12.5px; color: #DC2626; border: 1px solid #FCA5A5;" onclick="clearAllData()">
+            🗑️ ล้างข้อมูลทั้งหมด
+          </button>
+        </div>
+      </div>
+
       <div class="table-wrapper">
-        <table>
-          <thead><tr>
-            <th>เวลา</th><th>อายุ</th><th>สถานภาพ</th><th>ที่อยู่อาศัย</th>
-            <th>เอกสารที่มีปัญหา</th><th>ฟีเจอร์</th><th>เหตุผล</th><th>กลับมาใช้</th>
-            <th>ใช้ประจำ</th><th>มิติชีวิต</th><th>ช่องทาง</th><th>ปัจจัยดาวน์โหลด</th>
-            <th>ราคา</th><th>แบรนด์</th><th>คุณค่า</th><th>ข้อเสนอแนะ</th>
-          </tr></thead>
-          <tbody id="responses-tbody"><tr><td colspan="16" class="empty-cell">ยังไม่มีข้อมูล</td></tr></tbody>
+        <table id="responses-table">
+          <thead>
+            <tr>
+              <th style="width: 60px;">จัดการ</th>
+              <th>เวลา</th>
+              <th>อายุ</th>
+              <th>สถานภาพ</th>
+              <th>ที่พักอาศัย</th>
+              <th>ฟีเจอร์ที่ต้องการ</th>
+              <th>เหตุผลเปิดใช้ครั้งแรก</th>
+              <th>แนวโน้มใช้ประจำ</th>
+              <th>มิติชีวิต</th>
+              <th>โมเดลราคา</th>
+              <th>การรับรู้</th>
+              <th>ข้อเสนอแนะ</th>
+            </tr>
+          </thead>
+          <tbody id="responses-tbody">
+            <tr><td colspan="12" style="text-align: center; color: var(--text-muted); padding: 24px;">ยังไม่มีข้อมูลคำตอบจริงในระบบ (สามารถทดลองทำแบบสอบถามเพื่อดูผลได้ทันที)</td></tr>
+          </tbody>
         </table>
       </div>
-    </section>
-  </main>
+    </div>
 
+  </div>
+
+  <!-- Settings Modal for Google Sheets Webhook -->
   <div class="modal-overlay" id="webhook-modal">
     <div class="modal-card">
-      <h3>⚙️ Google Sheets Web App URL</h3>
-      <p>ใส่ URL จาก Google Apps Script ที่ Deploy เป็น Web App</p>
+      <h3>⚙️ ตั้งค่า Google Sheets Webhook URL</h3>
+      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;">
+        นำ <strong>Web App URL</strong> ที่ได้จากการ Deploy สคริปต์ใน <code>google-apps-script.js</code> มาวางที่นี่
+      </p>
+      
+      <label style="font-size: 12.5px; font-weight: 600; color: var(--deep-navy);">Google Apps Script Web App URL:</label>
       <input type="url" class="modal-input" id="webhook-input" placeholder="https://script.google.com/macros/s/.../exec">
-      <div class="modal-actions">
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
         <button class="btn btn-secondary" onclick="closeWebhookModal()">ยกเลิก</button>
-        <button class="btn btn-primary" onclick="saveWebhookUrl()">บันทึก</button>
+        <button class="btn btn-primary" onclick="saveWebhookUrl()">บันทึกการตั้งค่า</button>
       </div>
     </div>
   </div>
