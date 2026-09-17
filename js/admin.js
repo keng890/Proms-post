@@ -63,51 +63,129 @@ function logoutAdmin() {
 }
 
 // ==========================================
-// Data Retrieval (Real Data Only)
+// Data Retrieval (Google Sheets - Central Data)
 // ==========================================
-function getStoredResponses() {
-  const saved = localStorage.getItem(CONFIG.STORAGE_KEY_SURVEYS);
-  if (!saved) return [];
-  try {
-    return JSON.parse(saved);
-  } catch (e) {
-    return [];
+function getWebhookUrl() {
+  return (typeof CONFIG !== "undefined" && CONFIG.GOOGLE_SHEET_WEBHOOK_URL)
+    ? CONFIG.GOOGLE_SHEET_WEBHOOK_URL
+    : localStorage.getItem(CONFIG.STORAGE_KEY_WEBHOOK) || "";
+}
+
+function jsonpRequest(params) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "__promptpost_cb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+    const script = document.createElement("script");
+    const url = getWebhookUrl();
+
+    if (!url) {
+      reject(new Error("ยังไม่ได้ตั้งค่า Google Apps Script Web App URL"));
+      return;
+    }
+
+    const query = new URLSearchParams({ ...params, callback: callbackName, _: Date.now() });
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("หมดเวลารอข้อมูลจาก Google Sheets"));
+    }, 15000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[callbackName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[callbackName] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("ไม่สามารถเชื่อมต่อ Google Apps Script ได้"));
+    };
+
+    script.src = url + (url.includes("?") ? "&" : "?") + query.toString();
+    document.body.appendChild(script);
+  });
+}
+
+async function loadResponsesFromSheet() {
+  const result = await jsonpRequest({ action: "getResponses" });
+  if (!result || result.status !== "success") {
+    throw new Error(result?.message || "ไม่สามารถโหลดข้อมูลจาก Google Sheets ได้");
   }
+  return Array.isArray(result.responses) ? result.responses : [];
 }
 
-function saveResponses(list) {
-  localStorage.setItem(CONFIG.STORAGE_KEY_SURVEYS, JSON.stringify(list));
-}
+async function deleteResponse(index) {
+  const responses = window.currentResponses || [];
+  const row = responses[index];
+  if (!row || !row._rowNumber) return;
 
-// Delete an individual response (useful for test runs)
-function deleteResponse(index) {
   if (!confirm(`คุณต้องการลบข้อมูลแถวนี้ (รายการที่ ${index + 1}) ใช่หรือไม่?`)) return;
 
-  const responses = getStoredResponses();
-  if (index >= 0 && index < responses.length) {
-    responses.splice(index, 1);
-    saveResponses(responses);
-    initDashboard();
+  try {
+    const result = await jsonpRequest({ action: "deleteResponse", row: row._rowNumber });
+    if (!result || result.status !== "success") {
+      throw new Error(result?.message || "ลบข้อมูลไม่สำเร็จ");
+    }
+    await initDashboard();
+    alert("ลบข้อมูลจาก Google Sheets เรียบร้อยแล้ว");
+  } catch (error) {
+    console.error(error);
+    alert("ลบข้อมูลไม่สำเร็จ: " + error.message);
   }
 }
 
-function clearAllData() {
-  if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลคำตอบทั้งหมดในระบบ? (ไม่สามารถกู้คืนได้)")) return;
-  localStorage.removeItem(CONFIG.STORAGE_KEY_SURVEYS);
-  initDashboard();
+async function clearAllData() {
+  if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลคำตอบทั้งหมดใน Google Sheets? (ไม่สามารถกู้คืนได้)")) return;
+
+  try {
+    const result = await jsonpRequest({ action: "clearResponses" });
+    if (!result || result.status !== "success") {
+      throw new Error(result?.message || "ลบข้อมูลไม่สำเร็จ");
+    }
+    await initDashboard();
+    alert("ล้างข้อมูลจาก Google Sheets เรียบร้อยแล้ว");
+  } catch (error) {
+    console.error(error);
+    alert("ล้างข้อมูลไม่สำเร็จ: " + error.message);
+  }
 }
 
-function initDashboard() {
-  const responses = getStoredResponses();
-  document.getElementById("last-update").innerText = new Date().toLocaleTimeString("th-TH");
+async function initDashboard() {
+  try {
+    const responses = await loadResponsesFromSheet();
+    window.currentResponses = responses;
+    document.getElementById("last-update").innerText = new Date().toLocaleTimeString("th-TH");
 
-  renderKPIs(responses);
-  renderCharts(responses);
-  renderInsights(responses);
-  renderTable(responses);
+    renderKPIs(responses);
+    renderCharts(responses);
+    renderInsights(responses);
+    renderTable(responses);
+  } catch (error) {
+    console.error(error);
+    window.currentResponses = [];
+    document.getElementById("last-update").innerText = "เชื่อมต่อไม่ได้";
+    renderKPIs([]);
+    renderCharts([]);
+    renderInsights([]);
+    renderTable([]);
+
+    const tbody = document.getElementById("responses-tbody");
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:#DC2626;padding:24px;">ไม่สามารถโหลดข้อมูลจาก Google Sheets ได้<br><small>${escapeHtml(error.message)}</small></td></tr>`;
+    }
+  }
 
   const input = document.getElementById("webhook-input");
-  if (input) input.value = localStorage.getItem(CONFIG.STORAGE_KEY_WEBHOOK) || "";
+  if (input) input.value = getWebhookUrl();
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>'"]/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
+  }[ch]));
 }
 
 // 1. KPI Calculations
@@ -337,7 +415,7 @@ function renderTable(data) {
     const age = row.ageGroup ? row.ageGroup.split(" ")[0] : "-";
     const status = row.status || "-";
     const living = row.livingType || "-";
-    const feature = row.hybridFeatureInterest ? row.hybridFeatureInterest.split(" ")[0] : "-";
+    const feature = Array.isArray(row.hybridFeatureInterest) ? row.hybridFeatureInterest.join(", ") : (row.hybridFeatureInterest || "-");
     const trigger = row.triggerReason || "-";
     const regular = row.regularUseIntent ? (row.regularUseIntent.includes("แน่นอน") ? "🟢 ใช้แน่นอน" : row.regularUseIntent) : "-";
     const dimension = row.lifeDimension ? row.lifeDimension.split(":")[0] : "-";
@@ -370,7 +448,7 @@ function renderTable(data) {
 
 // 5. Export to CSV (Thai UTF-8 BOM)
 function exportToCSV() {
-  const data = getStoredResponses();
+  const data = window.currentResponses || [];
   if (data.length === 0) {
     alert("ไม่มีข้อมูลสำหรับส่งออก");
     return;
