@@ -28,7 +28,7 @@
     <div class="hero-card" id="hero-banner">
       <span class="hero-tag">สำรวจความคิดเห็นคนรุ่นใหม่</span>
       <h2>พฤติกรรมการใช้ชีวิตและจัดการเอกสารสำคัญในยุคดิจิทัล</h2>
-      <p>ร่วมแชร์ประสบการณ์เพื่อนำไปพัฒนาบริการ <strong>Prompt Post (ไปรษณีย์ไทย)</strong> ให้ตอบโจทย์ชีวิตนักศึกษาและคนเริ่มทำงาน ใช้เวลาตอบเพียง <strong>10-15 นาที</strong></p>
+      <p>ร่วมแชร์ประสบการณ์เพื่อนำไปพัฒนาบริการ <strong>Prompt Post (ไปรษณีย์ไทย)</strong> ให้ตอบโจทย์ชีวิตนักศึกษาและคนเริ่มทำงาน ใช้เวลาตอบเพียง <strong>1–2 นาที</strong></p>
       <div class="privacy-notice">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 4 10 8 10z"></path>
@@ -265,28 +265,28 @@
                 <div class="option-desc">ส่งเอกสารผ่านระบบออนไลน์ได้ง่ายและปลอดภัย หากผู้รับไม่เปิดอ่านภายในเวลาที่กำหนด ระบบสามารถพิมพ์เอกสารและส่งทางไปรษณีย์ให้อัตโนมัติ</div>
               </div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div>
                 <div class="option-text">เซ็นเอกสารออนไลน์ได้อย่างถูกต้องและน่าเชื่อถือ</div>
                 <div class="option-desc">สามารถเซ็นชื่อและประทับตราเอกสารแบบดิจิทัล พร้อมบันทึกวันและเวลาการเซ็น เพื่อช่วยยืนยันว่าเอกสารมีการลงนามจริงและสามารถตรวจสอบย้อนหลังได้</div>
               </div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div>
                 <div class="option-text">กระเป๋าเก็บเอกสารดิจิทัล</div>
                 <div class="option-desc">เก็บเอกสารสำคัญไว้ในรูปแบบดิจิทัล และสามารถตรวจสอบความถูกต้องของเอกสารได้ทันที โดยยืนยันตัวตนผ่าน ThaID</div>
               </div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div>
                 <div class="option-text">เก็บเอกสารและจ่ายเงินได้ในแอปเดียว</div>
                 <div class="option-desc">มีพื้นที่เก็บเอกสารออนไลน์ที่จัดเป็นหมวดหมู่ ช่วยให้ค้นหาเอกสารได้ง่าย พร้อมทั้งสามารถรับแจ้งหนี้และชำระค่าธรรมเนียมออนไลน์ ได้ภายในแอปเดียว</div>
               </div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div>
                 <div class="option-text">โหวตออนไลน์และส่งความรู้สึกดี ๆ ผ่านโปสการ์ด</div>
@@ -299,32 +299,32 @@
         <!-- ข้อ 3.2 -->
         <div style="margin-bottom: 22px;">
           <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">2. "เหตุผลสำคัญที่สุด" ที่จะทำให้ท่านตัดสินใจเปิดใช้งานแอปพลิเคชันนี้เป็นครั้งแรก? *</p>
-          <div class="options-list" data-name="triggerReason" data-required="true">
-            <div class="option-item" onclick="selectMultiple(this)">
+          <div class="options-list" data-name="triggerReason" data-type="single" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ความสะดวก — จัดการเอกสารและบริการต่าง ๆ ได้ในแอปเดียว</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ประหยัดเวลา — ไม่ต้องเดินทางหรือจัดการเอกสารด้วยตัวเอง</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ความปลอดภัย — มั่นใจว่าเอกสารสำคัญไม่สูญหายและไม่ถูกปลอมแปลง</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ความน่าเชื่อถือ — ส่งต่อเอกสารทางการได้ทันที โดยมีระบบรับรองความถูกต้องที่ปลอดภัย</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ลดการใช้กระดาษ — รับ–ส่งเอกสารในรูปแบบดิจิทัล</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ลดค่าใช้จ่าย — ลดค่าเดินทางและค่าใช้จ่ายในการจัดการเอกสาร</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ยังไม่มีความจำเป็นต้องใช้งาน</div>
             </div>
@@ -341,20 +341,20 @@
         <!-- ข้อ 3.3 -->
         <div style="margin-bottom: 22px;">
           <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">3. ท่านคาดว่าจะกลับมาใช้งานแอปพลิเคชั่นเมื่อใด? *</p>
-          <div class="options-list" data-name="usageFrequency" data-required="true">
-            <div class="option-item" onclick="selectMultiple(this)">
+          <div class="options-list" data-name="usageFrequency" data-type="single" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">เมื่อต้องทำธุรกรรมสำคัญ: เช่น สมัครงาน, ยื่นเอกสารการศึกษา, ทำเรื่องกับหน่วยงาน</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">เมื่อมีเอกสารใหม่เข้ามา: เช่น สัญญาใหม่, บิลค่าใช้จ่าย, เอกสารทางการเงิน</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ใช้งานประจำ: เพื่อจัดเก็บและอัปเดตเอกสารส่วนตัวอยู่เสมอ</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ใช้นานๆ ครั้ง: เฉพาะเวลาที่จำเป็นจริงๆ</div>
             </div>
@@ -371,24 +371,24 @@
         <!-- ข้อ 3.4 -->
         <div>
           <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">4. หากแอปพลิเคชันนี้พร้อมใช้งาน ท่านมีแนวโน้มที่จะใช้เป็นประจำหรือไม่? *</p>
-          <div class="options-list" data-name="regularUseIntent" data-required="true">
-            <div class="option-item" onclick="selectMultiple(this)">
+          <div class="options-list" data-name="regularUseIntent" data-type="single" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ใช้อย่างแน่นอน</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">มีแนวโน้มจะใช้</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ยังไม่แน่ใจ</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">มีแนวโน้มจะไม่ใช้</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ไม่ใช้แน่นอน</div>
             </div>
@@ -412,32 +412,32 @@
         
         <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">1. หากแอปพลิเคชันนี้สามารถแก้ปัญหาเรื่องเอกสารได้ทั้งหมด บริการนี้จะช่วยตอบโจทย์ในการใช้ชีวิตประจำวันของท่านในมิติใดมากที่สุด? *</p>
         
-        <div class="options-list" data-name="lifeDimension" data-required="true">
-          <div class="option-item" onclick="selectMultiple(this)">
+        <div class="options-list" data-name="lifeDimension" data-type="single" data-required="true">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div>
               <div class="option-text">Live Faster: สะดวก รวดเร็ว ทุกธุรกรรมจบได้ ในไม่กี่ขั้นตอน</div>
             </div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div>
               <div class="option-text">Live Smarter: ยกระดับคุณภาพชีวิตด้วยนวัตกรรมที่ทันสมัย</div>
             </div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div>
               <div class="option-text">Live Safer: ปลอดภัยในทุกการทําธุรกรรม</div>
             </div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div>
               <div class="option-text">Live Greener: ลดการใช้ทรัพยากรกระดาษ เพื่อโลกที่ยั่งยืน</div>
             </div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div>
               <div class="option-text">Live Happier: สร้างความสุขในทุกไลฟ์สไตล์ยุคดิจิทัล</div>
@@ -519,36 +519,36 @@
         <!-- ข้อ 6.1 -->
         <div style="margin-bottom: 22px;">
           <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">1. อะไรคือปัจจัยสำคัญที่สุดที่จะทำให้คุณตัดสินใจ "ดาวน์โหลด" หรือ "ทดลองใช้" แอปพลิเคชันนี้? *</p>
-          <div class="options-list" data-name="downloadFactor" data-required="true">
+          <div class="options-list" data-name="downloadFactor" data-type="multi" data-required="true">
             <div class="option-item" onclick="selectMultiple(this)">
               <div class="option-radio"></div>
               <div class="option-text">มีเวอร์ชั่นให้ทดลองใช้งานฟรี (Free Trial)</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">แอปช่วยแก้ปัญหาที่ฉันพบได้จริง</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ช่วยประหยัดเวลาในการจัดการเอกสารหรือข้อมูล</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">มั่นใจในความปลอดภัยและความเป็นส่วนตัวของข้อมูล</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">มีฟังก์ชันที่แตกต่างจากแอปอื่น</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">มีรีวิวหรือคะแนนการันตีจากผู้ใช้งานจริง</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">หน้าตาแอป (UI) ใช้งานง่าย ไม่ซับซ้อน</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">มีโปรโมชันส่วนลดพิเศษช่วงเปิดตัว</div>
             </div>
@@ -565,20 +565,20 @@
         <!-- ข้อ 6.2 -->
         <div>
           <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">2. หากแอปพลิเคชันนี้มีฟีเจอร์ที่ช่วยแก้ปัญหาข้างต้นได้จริง คุณยินดีจ่ายค่าบริการรูปแบบใด? *</p>
-          <div class="options-list" data-name="pricingModel" data-required="true">
-            <div class="option-item" onclick="selectMultiple(this)">
+          <div class="options-list" data-name="pricingModel" data-type="single" data-required="true">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ใช้งานฟรี (ยอมดูโฆษณา)</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">จ่ายรายเดือน (ราคาประหยัด)</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">จ่ายรายปี (คุ้มค่ากว่า)</div>
             </div>
-            <div class="option-item" onclick="selectMultiple(this)">
+            <div class="option-item" onclick="selectSingle(this)">
               <div class="option-radio"></div>
               <div class="option-text">ซื้อขาดครั้งเดียว (Lifetime Access)</div>
             </div>
@@ -623,16 +623,16 @@
 
         <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">1. คุณเคยเห็นหรือเคยยินชื่อแอปพลิเคชัน Prompt Post มาก่อนหรือไม่? *</p>
         
-        <div class="options-list" data-name="brandAwareness" data-required="true">
-          <div class="option-item" onclick="selectMultiple(this)">
+        <div class="options-list" data-name="brandAwareness" data-type="single" data-required="true">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div class="option-text">เคยใช้งานอยู่ปัจจุบัน</div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div class="option-text">เคยเห็น/เคยยินชื่อ แต่ยังไม่เคยใช้งาน</div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div class="option-text">ไม่เคยเห็น/ไม่เคยได้ยินมาก่อน</div>
           </div>
@@ -655,16 +655,16 @@
         
         <p class="q-title" style="font-size: 15px; margin-bottom: 8px;">1. คุณคิดว่าฟีเจอร์ของ Prompt Post สามารถช่วยตอบโจทย์ หรือแก้ปัญหาในชีวิตประจำวันของคุณได้มากน้อยเพียงใด? *</p>
         
-        <div class="options-list" data-name="valueRelief" data-required="true">
-          <div class="option-item" onclick="selectMultiple(this)">
+        <div class="options-list" data-name="valueRelief" data-type="single" data-required="true">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div class="option-text">ช่วยได้มากที่สุด (ตรงกับปัญหาที่พบอยู่พอดี)</div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div class="option-text">ช่วยได้ปานกลาง</div>
           </div>
-          <div class="option-item" onclick="selectMultiple(this)">
+          <div class="option-item" onclick="selectSingle(this)">
             <div class="option-radio"></div>
             <div class="option-text">ยังไม่ค่อยจำเป็นสำหรับฉันเท่าไร</div>
           </div>

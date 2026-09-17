@@ -30,7 +30,7 @@ const surveyData = {
   mediaChannels: [],
 
   // ส่วนที่ 6: Conversion & Pricing Intent
-  downloadFactor: "",
+  downloadFactor: [],
   pricingModel: "",
 
   // ส่วนที่ 7: Brand Awareness
@@ -257,7 +257,7 @@ async function submitSurvey() {
       await fetch(webhookUrl, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(surveyData)
       });
     } catch (netErr) {

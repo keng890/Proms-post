@@ -39,7 +39,6 @@ function doPost(e) {
         "3.1 ฟีเจอร์ที่จำเป็น (Hybrid Feature)",
         "3.2 เหตุผลเปิดใช้ครั้งแรก (Trigger Reason)",
         "3.3 ความถี่ในการใช้งาน (Usage Frequency)",
-        "3.4 แนวโน้มการใช้งานประจำ (Regular Use Intent)",
         "4.1 มิติชีวิตที่ช่วยลดความกังวล (Life Dimension)",
         "5.1 ช่องทางรับข้อมูลสื่อ (Media Channels)",
         "6.1 ปัจจัยตัดสินใจดาวน์โหลด (Download Factor)",
@@ -58,8 +57,7 @@ function doPost(e) {
       sheet.setFrozenRows(1);
     }
 
-    var raw = (e && e.postData && e.postData.contents) ? e.postData.contents : "";
-    var data = JSON.parse(raw);
+    var data = JSON.parse(e.postData.contents);
 
     var row = [
       data.timestamp || new Date().toLocaleString("th-TH", { timeZone: "Asia/Bangkok" }),
@@ -70,10 +68,9 @@ function doPost(e) {
       data.lostDocExp || "",
       data.wasteTime || "",
       data.wasteMoney || "",
-      Array.isArray(data.hybridFeatureInterest) ? data.hybridFeatureInterest.join(", ") : (data.hybridFeatureInterest || ""),
+      data.hybridFeatureInterest || "",
       data.triggerReason || "",
       data.usageFrequency || "",
-      data.regularUseIntent || "",
       data.lifeDimension || "",
       Array.isArray(data.mediaChannels) ? data.mediaChannels.join(", ") : (data.mediaChannels || ""),
       data.downloadFactor || "",
@@ -103,90 +100,5 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  var params = (e && e.parameter) ? e.parameter : {};
-  var action = params.action || "status";
-  var callback = params.callback || "";
-
-  try {
-    if (action === "getResponses") {
-      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-      var values = sheet.getDataRange().getValues();
-      var headers = values.length > 0 ? values[0] : [];
-      var responses = [];
-
-      for (var i = 1; i < values.length; i++) {
-        var row = values[i];
-        if (row.every(function(cell) { return cell === ""; })) continue;
-
-        var item = {
-          _rowNumber: i + 1,
-          timestamp: row[0] || "",
-          ageGroup: row[1] || "",
-          status: row[2] || "",
-          livingType: row[3] || "",
-          painDocs: row[4] || "",
-          lostDocExp: row[5] || "",
-          wasteTime: row[6] || "",
-          wasteMoney: row[7] || "",
-          hybridFeatureInterest: row[8] || "",
-          triggerReason: row[9] || "",
-          usageFrequency: row[10] || "",
-          regularUseIntent: row[11] || "",
-          lifeDimension: row[12] || "",
-          mediaChannels: row[13] || "",
-          downloadFactor: row[14] || "",
-          pricingModel: row[15] || "",
-          brandAwareness: row[16] || "",
-          valueRelief: row[17] || "",
-          actionableFeedback: row[18] || "",
-          persona: row[19] || ""
-        };
-        responses.push(item);
-      }
-
-      return jsonResponse({ status: "success", responses: responses }, callback);
-    }
-
-    if (action === "deleteResponse") {
-      var rowNumber = parseInt(params.row, 10);
-      if (!rowNumber || rowNumber < 2) {
-        return jsonResponse({ status: "error", message: "Invalid row number" }, callback);
-      }
-
-      var deleteSheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-      if (rowNumber > deleteSheet.getLastRow()) {
-        return jsonResponse({ status: "error", message: "Row not found" }, callback);
-      }
-
-      deleteSheet.deleteRow(rowNumber);
-      return jsonResponse({ status: "success", message: "Response deleted", row: rowNumber }, callback);
-    }
-
-    if (action === "clearResponses") {
-      var clearSheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-      var lastRow = clearSheet.getLastRow();
-      if (lastRow > 1) {
-        clearSheet.deleteRows(2, lastRow - 1);
-      }
-      return jsonResponse({ status: "success", message: "All responses deleted" }, callback);
-    }
-
-    return ContentService.createTextOutput("Prompt Post 9-Part Survey Webhook is active and running!");
-  } catch (error) {
-    return jsonResponse({ status: "error", message: error.toString() }, callback);
-  }
-}
-
-function jsonResponse(payload, callback) {
-  var json = JSON.stringify(payload);
-  if (callback) {
-    // callback is supplied only by the admin page; reject unsafe callback names.
-    if (!/^[A-Za-z_$][0-9A-Za-z_$\.]*$/.test(callback)) {
-      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Invalid callback" }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    return ContentService.createTextOutput(callback + "(" + json + ");")
-      .setMimeType(ContentService.MimeType.JAVASCRIPT);
-  }
-  return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput("Prompt Post 9-Part Survey Webhook is active and running!");
 }
