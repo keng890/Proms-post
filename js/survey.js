@@ -251,9 +251,8 @@ async function submitSurvey() {
   }
 
   // 2. Submit to Google Sheets Webhook if configured
-  // ใช้ text/plain เพื่อให้เป็น Simple Request และหลีกเลี่ยง CORS preflight
-  const webhookUrl = (CONFIG.GOOGLE_SHEET_WEBHOOK_URL || localStorage.getItem(CONFIG.STORAGE_KEY_WEBHOOK) || "").trim();
-  if (webhookUrl) {
+  const webhookUrl = CONFIG.GOOGLE_SHEET_WEBHOOK_URL;
+  if (webhookUrl && webhookUrl.trim() !== "") {
     try {
       await fetch(webhookUrl, {
         method: "POST",
@@ -262,10 +261,8 @@ async function submitSurvey() {
         body: JSON.stringify(surveyData)
       });
     } catch (netErr) {
-      console.warn("Google Sheets network submission failed:", netErr);
+      console.warn("Google Sheets network submission handled:", netErr);
     }
-  } else {
-    console.warn("Google Sheets Webhook URL is not configured.");
   }
 
   // Show Success Screen

@@ -42,7 +42,7 @@
 
 ---
 
-## 📊 วิธีเชื่อมต่อ Google Sheets (แก้ปัญหาส่งข้อมูลไม่เข้า Sheet)
+## 📊 วิธีเชื่อมต่อ Google Sheets (ใช้งานได้ใน 2 นาที)
 
 เพื่อให้ข้อมูลคำตอบถูกส่งไปบันทึกใน Google Sheets ของทีมคุณโดยอัตโนมัติ:
 
@@ -58,20 +58,7 @@
    - **ผู้ที่มีสิทธิ์เข้าถึง (Who has access): `ทุกคน (Anyone)`** *(สำคัญมาก เพื่อให้คนตอบส่งข้อมูลได้โดยไม่ต้องล็อกอิน)*
 8. คลิก **"ทำให้ใช้งานได้" (Deploy)** แล้ว **คัดลอก URL เว็บแอป (Web app URL)**
 9. นำ URL ที่ได้ ไปวางในช่องตั้งค่า:
-   - เปิดไฟล์ `admin.html` > คลิกปุ่ม **"⚙️ ตั้งค่า Google Sheets"** > วาง URL ที่ลงท้ายด้วย `/exec` > กดบันทึก
-
-### ⚠️ จุดสำคัญที่แก้แล้ว
-- หน้าแบบสอบถามส่ง Google Sheets ด้วย `POST` แบบ `text/plain` เพื่อหลีกเลี่ยงปัญหา CORS preflight ที่เกิดกับ `application/json` + `no-cors`
-- ข้อ 3.1 **เลือกฟีเจอร์ได้หลายข้อ** และข้อมูลจะถูกเก็บเป็นรายการทั้งหมด ไม่ใช่เฉพาะตัวเลือกเดียว
-- Dashboard และ Export CSV รองรับคำตอบหลายฟีเจอร์แล้ว
-- Google Apps Script เพิ่มคอลัมน์ `3.4 แนวโน้มการใช้งานประจำ` ให้ตรงกับข้อมูลที่แบบสอบถามเก็บไว้ และรองรับการย้าย Google Sheet เดิมจากเวอร์ชัน 19 คอลัมน์เป็น 20 คอลัมน์อัตโนมัติ
-
-### 🧪 วิธีทดสอบหลังแก้ไข
-1. เปิด URL Web App ที่ลงท้ายด้วย `/exec` ใน Chrome ถ้าเห็นข้อความ `Prompt Post 9-Part Survey Webhook is active and running!` แปลว่า Web App เปิดใช้งาน
-2. เข้า `admin.html` > ตั้งค่า Google Sheets > วาง URL `/exec` > บันทึก
-3. เปิด `index.html` แล้วตอบแบบสอบถาม 1 ครั้ง โดยข้อ 3.1 เลือก 2–3 ฟีเจอร์
-4. ตรวจ Google Sheets ว่ามีแถวใหม่ และช่อง `3.1 ฟีเจอร์ที่จำเป็น (Hybrid Feature)` มีรายการที่เลือกคั่นด้วย `, `
-5. ถ้าแก้โค้ดใน Apps Script หลังจาก Deploy แล้ว ให้ไปที่ **Deploy > Manage deployments > Edit** แล้วเลือกเวอร์ชันล่าสุด จากนั้นใช้ URL `/exec` เดิม
+   - เปิดไฟล์ `admin.html` > คลิกปุ่ม **"⚙️ ตั้งค่า Google Sheets"** > วาง URL > กดบันทึก (หรือนำไปใส่ใน `js/config.js`)
 
 *หมายเหตุ: แม้ไม่ได้เชื่อมต่อ Google Sheets ระบบก็ยังบันทึกข้อมูลลงในเบราว์เซอร์ (LocalStorage) ให้โดยอัตโนมัติ และยังสามารถ Export เป็นไฟล์ Excel/CSV ได้ตลอดเวลา*
 
@@ -103,16 +90,9 @@ promptpost-survey/
 - **หัวข้อ 4.5.6 ตัวชี้วัด Journey Funnel:** ใช้ตัวเลข *ThaID Acceptance Rate* และ *Transcript High Interest* อธิบายขั้นตอนการผลักดัน Conversion จาก Acquisition สู่ Activation
 
 
-## 🔴 สำคัญ: ข้อมูลผู้ตอบทุกคนจะรวมอยู่ที่ Admin ของคุณ
-เวอร์ชันนี้ใช้ Google Sheets เป็นแหล่งข้อมูลกลาง ไม่ใช้ localStorage ของแต่ละเครื่องเป็นฐานข้อมูล Admin อีกต่อไป
+## แก้ปัญหาข้อมูลจากคนอื่นไม่เข้า Google Sheets
+เวอร์ชันนี้กำหนด Web App URL ไว้ใน `js/config.js` แล้ว เพื่อให้ผู้ตอบทุกเครื่องส่งข้อมูลไป Google Apps Script URL เดียวกัน ไม่พึ่ง `localStorage` ของแต่ละเครื่อง
 
-หลัง Deploy `google-apps-script.js` แล้ว:
-1. ใช้ Web App URL ที่ลงท้ายด้วย `/exec`
-2. ใน `google-apps-script.js` มี `ACCESS_KEY` ให้ใช้ค่านั้น
-3. เปิด `admin.html` → ⚙️ ตั้งค่า Google Sheets
-4. ใส่ Web App URL และ Sync Key ให้ตรงกับ `ACCESS_KEY`
-5. กดบันทึก แล้ว Admin จะโหลดคำตอบจาก Google Sheets กลาง
-6. คนที่ตอบแบบสอบถามจะบันทึกข้อมูลเข้า Google Sheets เดียวกัน ไม่ว่าจะตอบจากโทรศัพท์/คอมพิวเตอร์เครื่องไหน
+สำคัญ: ใน Google Apps Script ให้ Deploy เป็น Web app โดย Execute as = Me และ Who has access = Anyone (ถ้าบัญชีอนุญาต) จากนั้นใช้ URL ที่ลงท้าย `/exec` ตามที่กำหนดใน `js/config.js`
 
-### ถ้าแก้ `google-apps-script.js`
-หลังแก้โค้ดต้องไปที่ **Deploy → Manage deployments → แก้ไข deployment → New version/เวอร์ชันใหม่ → Deploy** เพื่อให้ `/exec` ใช้โค้ดเวอร์ชันล่าสุด
+ฝั่งเว็บส่ง JSON เป็น `text/plain;charset=utf-8` เพื่อหลีกเลี่ยง CORS preflight ของ browser เมื่อเรียก Apps Script Web App

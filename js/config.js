@@ -2,20 +2,16 @@
  * Configuration & Storage Constants for Prompt Post Survey
  */
 const CONFIG = {
-  // วาง URL /exec ของ Google Apps Script ได้ตรงนี้ถ้าต้องการล็อกค่าไว้ในไฟล์
-  // หากเว้นว่าง ระบบจะอ่านค่าจาก LocalStorage ที่บันทึกผ่านหน้า Admin
-  GOOGLE_SHEET_WEBHOOK_URL: localStorage.getItem("promptpost_webhook_url") || "",
-
-  // คีย์สำหรับให้หน้า Admin อ่านข้อมูลจาก Google Sheets กลาง
-  // ผู้ใช้ต้องกรอกค่านี้ในหน้า Admin Settings ให้ตรงกับ ACCESS_KEY ใน Apps Script
-  STORAGE_KEY_SYNC: "promptpost_sheet_sync_key",
+  // นำ URL ที่ได้จากการ Deploy Google Apps Script (Web App) มาใส่ตรงนี้
+  // หรือสามารถเข้าไปกรอก/แก้ไขได้ในหน้า Admin Settings
+  GOOGLE_SHEET_WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbzElc8wv_G96qmAjCLybKBeOAMIiLnIeJNO3ZNQjhi4-lUCEjMGTc-Wljyw1XU9Fqse/exec",
 
   STORAGE_KEY_SURVEYS: "promptpost_survey_responses",
   STORAGE_KEY_WEBHOOK: "promptpost_webhook_url",
 
   // Brand Info
   APP_TITLE: "Prompt Post Survey (J-MAT Award 35)",
-  VERSION: "1.1.0"
+  VERSION: "1.0.0"
 };
 
 // Initial Mock Data (สำหรับให้หน้า Admin มีกราฟแสดงทันทีเพื่อการพรีเซนต์)
