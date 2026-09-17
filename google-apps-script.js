@@ -18,43 +18,71 @@
  * 9. นำ URL ที่ได้ ไปใส่ในหน้า Admin (ปุ่ม ⚙️ ตั้งค่า Google Sheets) หรือใส่ใน js/config.js
  */
 
+var HEADERS = [
+  "Timestamp (วันเวลา)",
+  "1.1 ช่วงอายุ (Age)",
+  "1.2 สถานภาพปัจจุบัน (Status)",
+  "1.3 รูปแบบการอยู่อาศัย (Living)",
+  "2.1 เอกสารที่ยุ่งยากที่สุด (Pain Docs)",
+  "2.2 ประสบการณ์เอกสารหาย (Lost Experience)",
+  "2.3 เวลาที่เสียไป (Waste Time)",
+  "2.4 ค่าใช้จ่ายที่เสียไป (Waste Money)",
+  "3.1 ฟีเจอร์ที่จำเป็น (Hybrid Feature)",
+  "3.2 เหตุผลเปิดใช้ครั้งแรก (Trigger Reason)",
+  "3.3 ความถี่ในการใช้งาน (Usage Frequency)",
+  "3.4 แนวโน้มการใช้งานประจำ (Regular Use Intent)",
+  "4.1 มิติชีวิตที่ช่วยลดความกังวล (Life Dimension)",
+  "5.1 ช่องทางรับข้อมูลสื่อ (Media Channels)",
+  "6.1 ปัจจัยตัดสินใจดาวน์โหลด (Download Factor)",
+  "6.2 โมเดลราคาที่ยินดีจ่าย (Pricing Intent)",
+  "7.1 การรับรู้แบรนด์ Prompt Post (Brand Awareness)",
+  "8.1 ระดับการช่วยแก้ปัญหา (Value Relief)",
+  "9.1 ข้อเสนอแนะเพิ่มเติม (Actionable Feedback)",
+  "Persona Classification"
+];
+
+function ensureHeaders(sheet) {
+  if (sheet.getLastRow() === 0) {
+    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+    formatHeader(sheet);
+    return;
+  }
+
+  // รองรับ Google Sheet เดิมที่สร้างจากสคริปต์เวอร์ชันก่อนหน้า (19 คอลัมน์)
+  var currentLastColumn = Math.max(sheet.getLastColumn(), 1);
+  var existingHeaders = sheet.getRange(1, 1, 1, currentLastColumn).getValues()[0];
+  var hasRegularIntent = existingHeaders.indexOf(HEADERS[11]) !== -1;
+
+  if (!hasRegularIntent) {
+    // เวอร์ชันเก่ามีคอลัมน์ 4.1 อยู่ที่คอลัมน์ 12 จึงต้องแทรกคอลัมน์ใหม่ก่อนหน้านั้น
+    var lifeDimensionIndex = existingHeaders.indexOf(HEADERS[12]);
+    if (lifeDimensionIndex !== -1) {
+      sheet.insertColumnBefore(lifeDimensionIndex + 1);
+    }
+  }
+
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  formatHeader(sheet);
+}
+
+function formatHeader(sheet) {
+  var headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
+  headerRange.setBackground("#2E3E8A");
+  headerRange.setFontColor("#FFFFFF");
+  headerRange.setFontWeight("bold");
+  sheet.setFrozenRows(1);
+}
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.tryLock(10000);
 
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    // ตั้งค่าหัวตาราง 9 ส่วนคำถามอัตโนมัติหากยังไม่มี
-    if (sheet.getLastRow() === 0) {
-      var headers = [
-        "Timestamp (วันเวลา)",
-        "1.1 ช่วงอายุ (Age)",
-        "1.2 สถานภาพปัจจุบัน (Status)",
-        "1.3 รูปแบบการอยู่อาศัย (Living)",
-        "2.1 เอกสารที่ยุ่งยากที่สุด (Pain Docs)",
-        "2.2 ประสบการณ์เอกสารหาย (Lost Experience)",
-        "2.3 เวลาที่เสียไป (Waste Time)",
-        "2.3 ค่าใช้จ่ายที่เสียไป (Waste Money)",
-        "3.1 ฟีเจอร์ที่จำเป็น (Hybrid Feature)",
-        "3.2 เหตุผลเปิดใช้ครั้งแรก (Trigger Reason)",
-        "3.3 ความถี่ในการใช้งาน (Usage Frequency)",
-        "4.1 มิติชีวิตที่ช่วยลดความกังวล (Life Dimension)",
-        "5.1 ช่องทางรับข้อมูลสื่อ (Media Channels)",
-        "6.1 ปัจจัยตัดสินใจดาวน์โหลด (Download Factor)",
-        "6.2 โมเดลราคาที่ยินดีจ่าย (Pricing Intent)",
-        "7.1 การรับรู้แบรนด์ Prompt Post (Brand Awareness)",
-        "8.1 ระดับการช่วยแก้ปัญหา (Value Relief)",
-        "9.1 ข้อเสนอแนะเพิ่มเติม (Actionable Feedback)",
-        "Persona Classification"
-      ];
-      sheet.appendRow(headers);
-      
-      var headerRange = sheet.getRange(1, 1, 1, headers.length);
-      headerRange.setBackground("#2E3E8A");
-      headerRange.setFontColor("#FFFFFF");
-      headerRange.setFontWeight("bold");
-      sheet.setFrozenRows(1);
+    ensureHeaders(sheet);
+
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error("ไม่พบข้อมูล POST ในคำขอ");
     }
 
     var data = JSON.parse(e.postData.contents);
@@ -68,9 +96,10 @@ function doPost(e) {
       data.lostDocExp || "",
       data.wasteTime || "",
       data.wasteMoney || "",
-      data.hybridFeatureInterest || "",
+      Array.isArray(data.hybridFeatureInterest) ? data.hybridFeatureInterest.join(", ") : (data.hybridFeatureInterest || ""),
       data.triggerReason || "",
       data.usageFrequency || "",
+      data.regularUseIntent || "",
       data.lifeDimension || "",
       Array.isArray(data.mediaChannels) ? data.mediaChannels.join(", ") : (data.mediaChannels || ""),
       data.downloadFactor || "",
@@ -81,7 +110,7 @@ function doPost(e) {
       data.persona || ""
     ];
 
-    sheet.appendRow(row);
+    sheet.getRange(sheet.getLastRow() + 1, 1, 1, HEADERS.length).setValues([row]);
 
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",

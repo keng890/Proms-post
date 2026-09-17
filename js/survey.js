@@ -18,7 +18,7 @@ const surveyData = {
   wasteMoney: "",
 
   // ส่วนที่ 3: Hybrid Use Case & Value Proposition
-  hybridFeatureInterest: "",
+  hybridFeatureInterest: [],
   triggerReason: "",
   usageFrequency: "",
   regularUseIntent: "",
@@ -251,14 +251,22 @@ async function submitSurvey() {
   }
 
   // 2. Submit to Google Sheets Webhook if configured
-  await fetch(webhookUrl, {
-  method: "POST",
-  mode: "no-cors",
-  headers: {
-    "Content-Type": "text/plain;charset=utf-8"
-  },
-  body: JSON.stringify(surveyData)
-});
+  // ใช้ text/plain เพื่อให้เป็น Simple Request และหลีกเลี่ยง CORS preflight
+  const webhookUrl = (CONFIG.GOOGLE_SHEET_WEBHOOK_URL || localStorage.getItem(CONFIG.STORAGE_KEY_WEBHOOK) || "").trim();
+  if (webhookUrl) {
+    try {
+      await fetch(webhookUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(surveyData)
+      });
+    } catch (netErr) {
+      console.warn("Google Sheets network submission failed:", netErr);
+    }
+  } else {
+    console.warn("Google Sheets Webhook URL is not configured.");
+  }
 
   // Show Success Screen
   document.getElementById("survey-form").style.display = "none";

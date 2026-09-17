@@ -156,12 +156,17 @@ function renderCharts(data) {
     "โหวตออนไลน์/โปสการ์ด": 0
   };
   data.forEach(d => {
-    const f = d.hybridFeatureInterest || "";
-    if (f.includes("รับ–ส่ง") || f.includes("รับ-ส่ง")) featMap["รับ-ส่งเอกสารปลอดภัย"]++;
-    else if (f.includes("เซ็นเอกสาร")) featMap["เซ็นเอกสารดิจิทัล"]++;
-    else if (f.includes("กระเป๋าเก็บเอกสาร") || f.includes("ThaID")) featMap["กระเป๋าเอกสาร ThaID"]++;
-    else if (f.includes("เก็บเอกสารและจ่ายเงิน")) featMap["เก็บเอกสารและจ่ายบิล"]++;
-    else if (f.includes("โหวต") || f.includes("โปสการ์ด")) featMap["โหวตออนไลน์/โปสการ์ด"]++;
+    const features = Array.isArray(d.hybridFeatureInterest)
+      ? d.hybridFeatureInterest
+      : (d.hybridFeatureInterest ? [d.hybridFeatureInterest] : []);
+
+    features.forEach(f => {
+      if (f.includes("รับ–ส่ง") || f.includes("รับ-ส่ง")) featMap["รับ-ส่งเอกสารปลอดภัย"]++;
+      if (f.includes("เซ็นเอกสาร")) featMap["เซ็นเอกสารดิจิทัล"]++;
+      if (f.includes("กระเป๋าเก็บเอกสาร") || f.includes("ThaID")) featMap["กระเป๋าเอกสาร ThaID"]++;
+      if (f.includes("เก็บเอกสารและจ่ายเงิน")) featMap["เก็บเอกสารและจ่ายบิล"]++;
+      if (f.includes("โหวต") || f.includes("โปสการ์ด")) featMap["โหวตออนไลน์/โปสการ์ด"]++;
+    });
   });
 
   createOrUpdateChart("chartFeatureNeeded", "doughnut", {
@@ -337,7 +342,10 @@ function renderTable(data) {
     const age = row.ageGroup ? row.ageGroup.split(" ")[0] : "-";
     const status = row.status || "-";
     const living = row.livingType || "-";
-    const feature = row.hybridFeatureInterest ? row.hybridFeatureInterest.split(" ")[0] : "-";
+    const featureList = Array.isArray(row.hybridFeatureInterest)
+      ? row.hybridFeatureInterest
+      : (row.hybridFeatureInterest ? [row.hybridFeatureInterest] : []);
+    const feature = featureList.length ? featureList.map(v => v.split(" ")[0]).join(", ") : "-";
     const trigger = row.triggerReason || "-";
     const regular = row.regularUseIntent ? (row.regularUseIntent.includes("แน่นอน") ? "🟢 ใช้แน่นอน" : row.regularUseIntent) : "-";
     const dimension = row.lifeDimension ? row.lifeDimension.split(":")[0] : "-";
@@ -356,7 +364,7 @@ function renderTable(data) {
         <td>${age}</td>
         <td>${status}</td>
         <td>${living}</td>
-        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${row.hybridFeatureInterest || ''}">${feature}</td>
+        <td style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${featureList.join(" | ")}">${feature}</td>
         <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${trigger}">${trigger}</td>
         <td>${regular}</td>
         <td>${dimension}</td>
@@ -399,7 +407,7 @@ function exportToCSV() {
       `"${(item.lostDocExp || "").replace(/"/g, '""')}"`,
       `"${item.wasteTime || ""}"`,
       `"${item.wasteMoney || ""}"`,
-      `"${(item.hybridFeatureInterest || "").replace(/"/g, '""')}"`,
+      `"${(Array.isArray(item.hybridFeatureInterest) ? item.hybridFeatureInterest.join("; ") : (item.hybridFeatureInterest || "")).replace(/"/g, '""')}"`,
       `"${(item.triggerReason || "").replace(/"/g, '""')}"`,
       `"${item.usageFrequency || ""}"`,
       `"${(item.regularUseIntent || "").replace(/"/g, '""')}"`,
@@ -434,8 +442,14 @@ function closeWebhookModal() {
 }
 function saveWebhookUrl() {
   const url = document.getElementById("webhook-input").value.trim();
+
+  if (url && (!url.startsWith("https://script.google.com/") || !url.endsWith("/exec"))) {
+    alert("กรุณาใช้ Google Apps Script Web App URL ที่ลงท้ายด้วย /exec เท่านั้น");
+    return;
+  }
+
   localStorage.setItem(CONFIG.STORAGE_KEY_WEBHOOK, url);
   CONFIG.GOOGLE_SHEET_WEBHOOK_URL = url;
   closeWebhookModal();
-  alert("บันทึก Google Sheets Webhook สำเร็จ!");
+  alert(url ? "บันทึก Google Sheets Webhook สำเร็จ!" : "ล้างค่า Google Sheets Webhook แล้ว");
 }
