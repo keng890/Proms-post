@@ -251,19 +251,14 @@ async function submitSurvey() {
   }
 
   // 2. Submit to Google Sheets Webhook if configured
-  const webhookUrl = CONFIG.GOOGLE_SHEET_WEBHOOK_URL;
-  if (webhookUrl && webhookUrl.trim() !== "") {
-    try {
-      await fetch(webhookUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(surveyData)
-      });
-    } catch (netErr) {
-      console.warn("Google Sheets network submission handled:", netErr);
-    }
-  }
+  await fetch(webhookUrl, {
+  method: "POST",
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "text/plain;charset=utf-8"
+  },
+  body: JSON.stringify(surveyData)
+});
 
   // Show Success Screen
   document.getElementById("survey-form").style.display = "none";
