@@ -100,6 +100,9 @@
         <a href="index.html" class="btn btn-secondary" style="padding: 10px 16px; font-size: 13.5px;" target="_blank">
           <span>&larr; เปิดหน้าแบบสอบถาม</span>
         </a>
+        <button id="btn-refresh-sheet" class="btn btn-outline" style="padding: 10px 16px; font-size: 13.5px;" onclick="refreshFromGoogleSheets()">
+          🔄 รีเฟรชข้อมูล
+        </button>
         <button class="btn btn-outline" style="padding: 10px 16px; font-size: 13.5px;" onclick="openWebhookModal()">
           ⚙️ ตั้งค่า Google Sheets
         </button>
@@ -254,6 +257,10 @@
       
       <label style="font-size: 12.5px; font-weight: 600; color: var(--deep-navy);">Google Apps Script Web App URL:</label>
       <input type="url" class="modal-input" id="webhook-input" placeholder="https://script.google.com/macros/s/.../exec">
+
+      <label style="font-size: 12.5px; font-weight: 600; color: var(--deep-navy); display:block; margin-top:12px;">Sync Key:</label>
+      <input type="password" class="modal-input" id="sync-key-input" placeholder="คัดลอกจาก ACCESS_KEY ใน google-apps-script.js" autocomplete="off">
+      <p style="font-size: 12px; color: var(--text-muted); margin: 8px 0 14px;">ใช้สำหรับให้หน้า Admin อ่านข้อมูลรวมจาก Google Sheets กลาง ไม่ต้องใส่ในหน้าแบบสอบถาม</p>
 
       <div style="display: flex; gap: 10px; justify-content: flex-end;">
         <button class="btn btn-secondary" onclick="closeWebhookModal()">ยกเลิก</button>

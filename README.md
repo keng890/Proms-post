@@ -101,3 +101,18 @@ promptpost-survey/
 - **หัวข้อ 4.5.1 การวิเคราะห์กลุ่มเป้าหมาย (Target Analysis):** ใช้สถิติเปรียบเทียบระหว่าง *Persona A (Fresh Starter)* และ *Persona B (Job Hunter)* เพื่ออธิบาย Persona ของทีมอย่างมีน้ำหนัก
 - **หัวข้อ 4.5.4 & 4.5.5 Pricing & Marketing Strategy:** นำตัวเลขจากกราฟ *Willingness to Pay* ไปกำหนดโครงสร้างราคา B2C (เช่น ตั้งราคา 29-39 บาท หรือจัดโปรโมชันสำหรับนักศึกษา)
 - **หัวข้อ 4.5.6 ตัวชี้วัด Journey Funnel:** ใช้ตัวเลข *ThaID Acceptance Rate* และ *Transcript High Interest* อธิบายขั้นตอนการผลักดัน Conversion จาก Acquisition สู่ Activation
+
+
+## 🔴 สำคัญ: ข้อมูลผู้ตอบทุกคนจะรวมอยู่ที่ Admin ของคุณ
+เวอร์ชันนี้ใช้ Google Sheets เป็นแหล่งข้อมูลกลาง ไม่ใช้ localStorage ของแต่ละเครื่องเป็นฐานข้อมูล Admin อีกต่อไป
+
+หลัง Deploy `google-apps-script.js` แล้ว:
+1. ใช้ Web App URL ที่ลงท้ายด้วย `/exec`
+2. ใน `google-apps-script.js` มี `ACCESS_KEY` ให้ใช้ค่านั้น
+3. เปิด `admin.html` → ⚙️ ตั้งค่า Google Sheets
+4. ใส่ Web App URL และ Sync Key ให้ตรงกับ `ACCESS_KEY`
+5. กดบันทึก แล้ว Admin จะโหลดคำตอบจาก Google Sheets กลาง
+6. คนที่ตอบแบบสอบถามจะบันทึกข้อมูลเข้า Google Sheets เดียวกัน ไม่ว่าจะตอบจากโทรศัพท์/คอมพิวเตอร์เครื่องไหน
+
+### ถ้าแก้ `google-apps-script.js`
+หลังแก้โค้ดต้องไปที่ **Deploy → Manage deployments → แก้ไข deployment → New version/เวอร์ชันใหม่ → Deploy** เพื่อให้ `/exec` ใช้โค้ดเวอร์ชันล่าสุด

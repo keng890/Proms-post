@@ -41,6 +41,21 @@ var HEADERS = [
   "Persona Classification"
 ];
 
+// ========================================================================
+// คีย์สำหรับอ่านข้อมูลจาก Google Sheets ในหน้า Admin
+// เปลี่ยนค่านี้ได้ แต่ต้องใส่ค่าเดียวกันในหน้า Admin > ตั้งค่า Google Sheets
+// ========================================================================
+var ACCESS_KEY = "PromptPost-Admin-2026-9a7Kx!42";
+
+function jsonp(callback, payload) {
+  if (!callback || !/^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)) {
+    return ContentService.createTextOutput(JSON.stringify(payload))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  return ContentService.createTextOutput(callback + "(" + JSON.stringify(payload) + ");")
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+
 function ensureHeaders(sheet) {
   if (sheet.getLastRow() === 0) {
     sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
@@ -129,5 +144,61 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  return ContentService.createTextOutput("Prompt Post 9-Part Survey Webhook is active and running!");
+  var params = (e && e.parameter) ? e.parameter : {};
+  var action = params.action || "health";
+
+  // Health check
+  if (action === "health") {
+    return ContentService.createTextOutput("Prompt Post 9-Part Survey Webhook is active and running!");
+  }
+
+  // Admin data endpoint (JSONP so it works from a normal static website without CORS setup)
+  if (action === "getResponses") {
+    var callback = params.callback || "";
+    if (params.key !== ACCESS_KEY) {
+      return jsonp(callback, { status: "error", message: "Invalid access key", data: [] });
+    }
+
+    try {
+      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+      ensureHeaders(sheet);
+      var lastRow = sheet.getLastRow();
+      if (lastRow < 2) {
+        return jsonp(callback, { status: "success", data: [], total: 0 });
+      }
+
+      var values = sheet.getRange(2, 1, lastRow - 1, HEADERS.length).getDisplayValues();
+      var data = values.map(function(row, index) {
+        return {
+          _sheetRow: index + 2,
+          timestamp: row[0] || "",
+          ageGroup: row[1] || "",
+          status: row[2] || "",
+          livingType: row[3] || "",
+          painDocs: row[4] ? row[4].split(/\s*,\s*/) : [],
+          lostDocExp: row[5] || "",
+          wasteTime: row[6] || "",
+          wasteMoney: row[7] || "",
+          hybridFeatureInterest: row[8] ? row[8].split(/\s*,\s*/) : [],
+          triggerReason: row[9] || "",
+          usageFrequency: row[10] || "",
+          regularUseIntent: row[11] || "",
+          lifeDimension: row[12] || "",
+          mediaChannels: row[13] ? row[13].split(/\s*,\s*/) : [],
+          downloadFactor: row[14] || "",
+          pricingModel: row[15] || "",
+          brandAwareness: row[16] || "",
+          valueRelief: row[17] || "",
+          actionableFeedback: row[18] || "",
+          persona: row[19] || ""
+        };
+      });
+
+      return jsonp(callback, { status: "success", data: data, total: data.length });
+    } catch (error) {
+      return jsonp(callback, { status: "error", message: error.toString(), data: [] });
+    }
+  }
+
+  return ContentService.createTextOutput("Unknown action");
 }

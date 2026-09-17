@@ -6,6 +6,10 @@ const CONFIG = {
   // หากเว้นว่าง ระบบจะอ่านค่าจาก LocalStorage ที่บันทึกผ่านหน้า Admin
   GOOGLE_SHEET_WEBHOOK_URL: localStorage.getItem("promptpost_webhook_url") || "",
 
+  // คีย์สำหรับให้หน้า Admin อ่านข้อมูลจาก Google Sheets กลาง
+  // ผู้ใช้ต้องกรอกค่านี้ในหน้า Admin Settings ให้ตรงกับ ACCESS_KEY ใน Apps Script
+  STORAGE_KEY_SYNC: "promptpost_sheet_sync_key",
+
   STORAGE_KEY_SURVEYS: "promptpost_survey_responses",
   STORAGE_KEY_WEBHOOK: "promptpost_webhook_url",
 

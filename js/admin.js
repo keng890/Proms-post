@@ -5,6 +5,8 @@
 
 const ADMIN_PASSWORD_HASH = "0637941837";
 let charts = {};
+let dashboardData = [];
+let syncLoading = false;
 
 const COLORS = {
   primaryRed: "#FE3B1F",
@@ -63,9 +65,13 @@ function logoutAdmin() {
 }
 
 // ==========================================
-// Data Retrieval (Real Data Only)
+// Data Retrieval - Google Sheets is the central source of truth
 // ==========================================
 function getStoredResponses() {
+  return dashboardData;
+}
+
+function getLocalResponses() {
   const saved = localStorage.getItem(CONFIG.STORAGE_KEY_SURVEYS);
   if (!saved) return [];
   try {
@@ -79,35 +85,82 @@ function saveResponses(list) {
   localStorage.setItem(CONFIG.STORAGE_KEY_SURVEYS, JSON.stringify(list));
 }
 
-// Delete an individual response (useful for test runs)
-function deleteResponse(index) {
-  if (!confirm(`คุณต้องการลบข้อมูลแถวนี้ (รายการที่ ${index + 1}) ใช่หรือไม่?`)) return;
+function renderDashboard(data) {
+  dashboardData = Array.isArray(data) ? data : [];
+  document.getElementById("last-update").innerText = new Date().toLocaleTimeString("th-TH");
+  renderKPIs(dashboardData);
+  renderCharts(dashboardData);
+  renderInsights(dashboardData);
+  renderTable(dashboardData);
+}
 
-  const responses = getStoredResponses();
-  if (index >= 0 && index < responses.length) {
-    responses.splice(index, 1);
-    saveResponses(responses);
-    initDashboard();
+function refreshFromGoogleSheets() {
+  const url = (localStorage.getItem(CONFIG.STORAGE_KEY_WEBHOOK) || CONFIG.GOOGLE_SHEET_WEBHOOK_URL || "").trim();
+  const key = (localStorage.getItem(CONFIG.STORAGE_KEY_SYNC) || "").trim();
+
+  if (!url) {
+    alert("ยังไม่ได้ตั้งค่า Google Sheets Web App URL");
+    return;
   }
+  if (!key) {
+    alert("ยังไม่ได้ตั้งค่า Sync Key กรุณาเปิด ⚙️ ตั้งค่า Google Sheets แล้วกรอก Sync Key ให้ตรงกับ ACCESS_KEY ใน Apps Script");
+    return;
+  }
+  if (syncLoading) return;
+
+  syncLoading = true;
+  const btn = document.getElementById("btn-refresh-sheet");
+  if (btn) { btn.disabled = true; btn.innerText = "⏳ กำลังโหลด..."; }
+
+  const callbackName = "__promptPostSheetCallback_" + Date.now();
+  const script = document.createElement("script");
+  const cleanup = () => {
+    syncLoading = false;
+    if (btn) { btn.disabled = false; btn.innerText = "🔄 รีเฟรชข้อมูล"; }
+    try { delete window[callbackName]; } catch (_) {}
+    script.remove();
+  };
+
+  window[callbackName] = function(result) {
+    cleanup();
+    if (!result || result.status !== "success") {
+      alert("อ่านข้อมูลจาก Google Sheets ไม่สำเร็จ: " + ((result && result.message) || "ไม่ทราบสาเหตุ"));
+      return;
+    }
+    renderDashboard(result.data || []);
+    localStorage.setItem(CONFIG.STORAGE_KEY_SURVEYS, JSON.stringify(result.data || []));
+  };
+
+  script.onerror = function() {
+    cleanup();
+    alert("เชื่อมต่อ Google Sheets ไม่สำเร็จ กรุณาตรวจสอบ Web App URL และ Sync Key");
+  };
+
+  const separator = url.includes("?") ? "&" : "?";
+  script.src = url + separator + "action=getResponses&key=" + encodeURIComponent(key) + "&callback=" + encodeURIComponent(callbackName) + "&_=" + Date.now();
+  document.body.appendChild(script);
+}
+
+function deleteResponse(index) {
+  alert("ข้อมูลใน Admin มาจาก Google Sheets กลาง จึงไม่ควรลบด้วยปุ่ม LocalStorage เดิม หากต้องการระบบลบข้อมูลจากชีท ผมสามารถเพิ่มให้ได้ครับ");
 }
 
 function clearAllData() {
-  if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลคำตอบทั้งหมดในระบบ? (ไม่สามารถกู้คืนได้)")) return;
-  localStorage.removeItem(CONFIG.STORAGE_KEY_SURVEYS);
-  initDashboard();
+  alert("ข้อมูลจริงอยู่ใน Google Sheets กลาง จึงไม่ลบจาก LocalStorage ของเครื่องนี้");
 }
 
-function initDashboard() {
-  const responses = getStoredResponses();
-  document.getElementById("last-update").innerText = new Date().toLocaleTimeString("th-TH");
-
-  renderKPIs(responses);
-  renderCharts(responses);
-  renderInsights(responses);
-  renderTable(responses);
+async function initDashboard() {
+  const local = getLocalResponses();
+  renderDashboard(local);
 
   const input = document.getElementById("webhook-input");
+  const keyInput = document.getElementById("sync-key-input");
   if (input) input.value = localStorage.getItem(CONFIG.STORAGE_KEY_WEBHOOK) || "";
+  if (keyInput) keyInput.value = localStorage.getItem(CONFIG.STORAGE_KEY_SYNC) || "";
+
+  const url = (localStorage.getItem(CONFIG.STORAGE_KEY_WEBHOOK) || CONFIG.GOOGLE_SHEET_WEBHOOK_URL || "").trim();
+  const key = (localStorage.getItem(CONFIG.STORAGE_KEY_SYNC) || "").trim();
+  if (url && key) refreshFromGoogleSheets();
 }
 
 // 1. KPI Calculations
@@ -442,14 +495,21 @@ function closeWebhookModal() {
 }
 function saveWebhookUrl() {
   const url = document.getElementById("webhook-input").value.trim();
+  const key = document.getElementById("sync-key-input").value.trim();
 
   if (url && (!url.startsWith("https://script.google.com/") || !url.endsWith("/exec"))) {
     alert("กรุณาใช้ Google Apps Script Web App URL ที่ลงท้ายด้วย /exec เท่านั้น");
     return;
   }
+  if (url && !key) {
+    alert("กรุณาใส่ Sync Key ให้ตรงกับ ACCESS_KEY ใน google-apps-script.js");
+    return;
+  }
 
   localStorage.setItem(CONFIG.STORAGE_KEY_WEBHOOK, url);
+  localStorage.setItem(CONFIG.STORAGE_KEY_SYNC, key);
   CONFIG.GOOGLE_SHEET_WEBHOOK_URL = url;
   closeWebhookModal();
-  alert(url ? "บันทึก Google Sheets Webhook สำเร็จ!" : "ล้างค่า Google Sheets Webhook แล้ว");
+  alert(url ? "บันทึกการเชื่อมต่อ Google Sheets สำเร็จ!" : "ล้างค่าการเชื่อมต่อ Google Sheets แล้ว");
+  if (url && key) refreshFromGoogleSheets();
 }
