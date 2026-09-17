@@ -4,7 +4,7 @@
 const CONFIG = {
   // นำ URL ที่ได้จากการ Deploy Google Apps Script (Web App) มาใส่ตรงนี้
   // หรือสามารถเข้าไปกรอก/แก้ไขได้ในหน้า Admin Settings
-  GOOGLE_SHEET_WEBHOOK_URL: localStorage.getItem("promptpost_webhook_url") || "",
+  GOOGLE_SHEET_WEBHOOK_URL: localStorage.getItem("https://script.google.com/macros/s/AKfycbyMduBfJA7J8Ah_ms15it4m_LkWYaYzm1EqCNHmm7TBaBjVwqvR0o11yo9hdJI4Vrw1/exec"),
 
   STORAGE_KEY_SURVEYS: "promptpost_survey_responses",
   STORAGE_KEY_WEBHOOK: "promptpost_webhook_url",
