@@ -1,111 +1,98 @@
 /**
- * Survey Logic & State Management - Updated with Validation Fixes
+ * Prompt Post Survey Logic
+ * Data source of truth: Google Sheets via Google Apps Script.
  */
-
 let currentStep = 1;
 const totalSteps = 9;
 
 const surveyData = {
-  // ส่วนที่ 1: Screening & Demographics
   ageGroup: "",
   status: "",
   livingType: "",
-  
-  // ส่วนที่ 2: Behavior & Pain Points
   painDocs: [],
   lostDocExp: "",
   wasteTime: "",
   wasteMoney: "",
-
-  // ส่วนที่ 3: Hybrid Use Case & Value Proposition
   hybridFeatureInterest: "",
   triggerReason: "",
   usageFrequency: "",
   regularUseIntent: "",
-
-  // ส่วนที่ 4: Pain to Solution Connection
   lifeDimension: "",
-
-  // ส่วนที่ 5: Marketing Channels
   mediaChannels: [],
-
-  // ส่วนที่ 6: Conversion & Pricing Intent
-  downloadFactor: "",
-  pricingModel: "",
-
-  // ส่วนที่ 7: Brand Awareness
+  downloadFactors: [],
+  pricingModels: [],
   brandAwareness: "",
-
-  // ส่วนที่ 8: Value & Pain Point Relief
   valueRelief: "",
-
-  // ส่วนที่ 9: Actionable Feedback
   actionableFeedback: "",
-
   timestamp: ""
 };
 
-// Selection Handlers (แก้ไขใหม่ให้ล้างข้อมูลช่องที่ไม่ได้เลือก)
-function selectSingle(element, hasInput = false) {
+const stepTitles = [
+  "Screening & Demographics",
+  "Behavior & Pain Points",
+  "Hybrid Use Case & Value Proposition",
+  "Pain to Solution Connection",
+  "Target & Marketing Channels",
+  "Conversion & Pricing Intent",
+  "Brand Awareness",
+  "Value & Pain Point Relief",
+  "Actionable Feedback"
+];
+
+function selectSingle(element) {
   const parent = element.closest(".options-list");
-  
-  parent.querySelectorAll(".option-item").forEach(item => {
-    item.classList.remove("selected");
-    // ถ้าข้อไหนไม่ได้ถูกเลือก ให้เคลียร์ข้อความในช่อง input ทิ้ง
-    const input = item.querySelector(".inline-input");
-    if (input && item !== element) {
-      input.value = "";
-    }
-  });
-  
+  parent.querySelectorAll(".option-item").forEach(item => item.classList.remove("selected"));
   element.classList.add("selected");
 
-  const fieldName = parent.getAttribute("data-name");
-  let value = element.querySelector(".option-text").innerText.trim();
+  const fieldName = parent.dataset.name;
+  let value = element.querySelector(".option-text")?.innerText.trim() || "";
   surveyData[fieldName] = value;
+
+  if (element.dataset.terminate === "true") {
+    surveyData[fieldName] = value;
+  }
 }
 
 function selectMultiple(element, maxLimit = 99) {
   const parent = element.closest(".options-list");
-  const currentlySelected = parent.querySelectorAll(".option-item.selected");
+  const selected = parent.querySelectorAll(".option-item.selected");
 
-  if (!element.classList.contains("selected") && currentlySelected.length >= maxLimit) {
-    alert(`คุณสามารถเลือกได้สูงสุดไม่เกิน ${maxLimit} ข้อครับ`);
+  if (!element.classList.contains("selected") && selected.length >= maxLimit) {
+    alert(`คุณสามารถเลือกได้สูงสุด ${maxLimit} ข้อครับ`);
     return;
   }
 
   element.classList.toggle("selected");
-  const fieldName = parent.getAttribute("data-name");
+  const fieldName = parent.dataset.name;
+  surveyData[fieldName] = Array.from(parent.querySelectorAll(".option-item.selected"))
+    .map(item => item.querySelector(".option-text")?.innerText.trim() || "");
+}
 
-  const selectedItems = parent.querySelectorAll(".option-item.selected");
-  const values = Array.from(selectedItems).map(item => item.querySelector(".option-text").innerText.trim());
-  surveyData[fieldName] = values;
-  
-  // ถ้าเอาติ๊กออก ให้ล้างข้อความในช่อง input ทิ้งด้วย
-  if (!element.classList.contains("selected")) {
-    const input = element.querySelector(".inline-input");
-    if (input) input.value = "";
+function updateOtherValue(fieldName, baseValue, inputId) {
+  const input = document.getElementById(inputId);
+  if (surveyData[fieldName] && surveyData[fieldName].includes(baseValue) && input && input.value.trim()) {
+    surveyData[fieldName] = `${baseValue}: ${input.value.trim()}`;
   }
 }
 
-// Step 1: Screening & Termination Check
+function updateMultiOther(fieldName, baseValue, inputId) {
+  const input = document.getElementById(inputId);
+  if (!Array.isArray(surveyData[fieldName])) return;
+  surveyData[fieldName] = surveyData[fieldName].map(v =>
+    v === baseValue && input && input.value.trim() ? `${baseValue}: ${input.value.trim()}` : v
+  );
+}
+
 function handleStep1Next() {
   if (!validateStep(1)) return;
 
-  const statusOther = document.getElementById("status-other").value.trim();
-  if (surveyData.status.includes("อื่นๆ") && statusOther) {
-    surveyData.status = `อื่นๆ: ${statusOther}`;
-  }
-
-  const livingOther = document.getElementById("living-other").value.trim();
-  if (surveyData.livingType.includes("อื่นๆ") && livingOther) {
-    surveyData.livingType = `อื่นๆ: ${livingOther}`;
-  }
+  updateOtherValue("status", "อื่นๆ", "status-other");
+  updateOtherValue("livingType", "อื่นๆ", "living-other");
 
   if (
-    surveyData.ageGroup.includes("น้อยกว่า 21") || 
-    surveyData.ageGroup.includes("มากกว่า 25") || 
-    surveyData.status.includes("มากกว่า 1 ปี")
+    surveyData.ageGroup.includes("น้อยกว่า 21") ||
+    surveyData.ageGroup.includes("มากกว่า 25") ||
+    surveyData.status.includes("ทำงานมาแล้วมากกว่า 1 ปี")
   ) {
     terminateSurvey();
     return;
@@ -119,181 +106,133 @@ function terminateSurvey() {
   document.getElementById("progress-wrapper").style.display = "none";
   document.getElementById("hero-banner").style.display = "none";
   document.getElementById("terminate-screen").style.display = "block";
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({top: 0, behavior: "smooth"});
 }
 
 function updateProgress(step) {
   const percent = Math.round((step / totalSteps) * 100);
-  const progressBar = document.getElementById("progress-bar");
-  const stepLabel = document.getElementById("step-label");
-  const stepPercent = document.getElementById("step-percent");
-
-  const stepTitles = [
-    "ส่วนที่ 1: Screening & Demographics",
-    "ส่วนที่ 2: Behavior & Pain Points",
-    "ส่วนที่ 3: Hybrid Use Case & Value Proposition",
-    "ส่วนที่ 4: Pain to Solution Connection",
-    "ส่วนที่ 5: Target & Marketing Channels",
-    "ส่วนที่ 6: Conversion & Pricing Intent",
-    "ส่วนที่ 7: Brand Awareness",
-    "ส่วนที่ 8: Value & Pain Point Relief",
-    "ส่วนที่ 9: Actionable Feedback"
-  ];
-
-  if (progressBar) progressBar.style.width = `${percent}%`;
-  if (stepLabel) stepLabel.innerText = `${stepTitles[step - 1] || `ส่วนที่ ${step}`} (${step}/${totalSteps})`;
-  if (stepPercent) stepPercent.innerText = `${percent}%`;
+  const bar = document.getElementById("progress-bar");
+  const label = document.getElementById("step-label");
+  const pct = document.getElementById("step-percent");
+  if (bar) bar.style.width = `${percent}%`;
+  if (label) label.innerText = `ส่วนที่ ${step} จาก ${totalSteps}: ${stepTitles[step - 1] || ""}`;
+  if (pct) pct.innerText = `${percent}%`;
 }
 
-// Validate Step (แก้ไขใหม่ให้ตรวจสอบ input เฉพาะข้อที่ถูกเลือก)
 function validateStep(stepNumber) {
-  const currentCard = document.querySelector(`.survey-step[data-step="${stepNumber}"]`);
-  if (!currentCard) return true;
+  const card = document.querySelector(`.survey-step[data-step="${stepNumber}"]`);
+  if (!card) return true;
 
-  const requiredLists = currentCard.querySelectorAll('.options-list[data-required="true"]');
-  for (let list of requiredLists) {
-    const fieldName = list.getAttribute("data-name");
-    const isMulti = list.getAttribute("data-type") === "multi";
-    const selectedItems = list.querySelectorAll('.option-item.selected');
+  const lists = card.querySelectorAll('.options-list[data-required="true"]');
+  for (const list of lists) {
+    const field = list.dataset.name;
+    const isMulti = list.dataset.type === "multi";
+    const value = surveyData[field];
 
-    // 1. ตรวจสอบว่าได้กดเลือกตัวเลือกหรือยัง
-    if (selectedItems.length === 0) {
-      alert("กรุณาเลือกคำตอบให้ครบถ้วนเพื่อไปต่อครับ");
+    if (isMulti && (!Array.isArray(value) || value.length === 0)) {
+      alert("กรุณาเลือกคำตอบอย่างน้อย 1 ข้อครับ");
       return false;
     }
-
-    // 2. ตรวจสอบช่องกรอกข้อความ (เช็คเฉพาะตัวเลือกที่ 'ถูกกดเลือก' เท่านั้น)
-    for (let item of selectedItems) {
-      const input = item.querySelector('.inline-input');
-      // ถ้ามีช่องให้กรอก และช่องนั้นว่างเปล่า
-      if (input && input.value.trim() === '') {
-        alert("กรุณาระบุข้อมูลเพิ่มเติมในตัวเลือกที่คุณเลือกด้วยครับ");
-        input.focus(); // เด้งไปโฟกัสที่ช่องให้พิมพ์
-        return false;
-      }
-    }
-
-    if (isMulti) {
-      if (!surveyData[fieldName] || surveyData[fieldName].length === 0) {
-        alert("กรุณาเลือกคำตอบอย่างน้อย 1 ข้อเพื่อไปต่อครับ");
-        return false;
-      }
-    } else {
-      if (!surveyData[fieldName] || surveyData[fieldName] === "") {
-        alert("กรุณาเลือกคำตอบให้ครบถ้วนเพื่อไปต่อครับ");
-        return false;
-      }
+    if (!isMulti && (!value || value === "")) {
+      alert("กรุณาเลือกคำตอบให้ครบถ้วนครับ");
+      return false;
     }
   }
+
+  if (stepNumber === 2) {
+    updateMultiOther("painDocs", "อื่นๆ", "pain-other");
+
+    if (surveyData.lostDocExp.includes("เคยประสบปัญหา")) {
+      const detail = document.getElementById("lost-doc-detail")?.value.trim();
+      if (!detail) {
+        alert("กรุณาระบุเหตุการณ์ที่เคยประสบปัญหาเอกสารครับ");
+        document.getElementById("lost-doc-detail")?.focus();
+        return false;
+      }
+      surveyData.lostDocExp = `เคยประสบปัญหา: ${detail}`;
+    }
+  }
+
+  if (stepNumber === 3) {
+    updateOtherValue("triggerReason", "อื่นๆ", "trigger-other");
+    updateOtherValue("usageFrequency", "อื่นๆ", "usage-other");
+  }
+
+  if (stepNumber === 5) {
+    updateMultiOther("mediaChannels", "อื่นๆ", "media-other");
+  }
+
+  if (stepNumber === 6) {
+    updateMultiOther("downloadFactors", "อื่นๆ", "download-other");
+    updateMultiOther("pricingModels", "อื่นๆ", "pricing-other");
+  }
+
   return true;
 }
 
 function nextStep(step) {
-  if (step === 2) {
-    const painOther = document.getElementById("pain-other").value.trim();
-    if (painOther && Array.isArray(surveyData.painDocs)) {
-      surveyData.painDocs = surveyData.painDocs.map(p => p.includes("อื่นๆ") ? `อื่นๆ: ${painOther}` : p);
-    }
-    const lostDetail = document.getElementById("lost-doc-detail").value.trim();
-    if (surveyData.lostDocExp.includes("เคยประสบปัญหา") && lostDetail) {
-      surveyData.lostDocExp = `เคยประสบปัญหา: ${lostDetail}`;
-    }
-  }
-
-  if (step === 3) {
-    const triggerOther = document.getElementById("trigger-other").value.trim();
-    if (surveyData.triggerReason.includes("อื่นๆ") && triggerOther) {
-      surveyData.triggerReason = `อื่นๆ: ${triggerOther}`;
-    }
-    const usageOther = document.getElementById("usage-other").value.trim();
-    if (surveyData.usageFrequency.includes("อื่นๆ") && usageOther) {
-      surveyData.usageFrequency = `อื่นๆ: ${usageOther}`;
-    }
-  }
-
-  if (step === 5) {
-    const mediaOther = document.getElementById("media-other").value.trim();
-    if (mediaOther && Array.isArray(surveyData.mediaChannels)) {
-      surveyData.mediaChannels = surveyData.mediaChannels.map(m => m.includes("อื่นๆ") ? `อื่นๆ: ${mediaOther}` : m);
-    }
-  }
-
-  if (step === 6) {
-    const factorOther = document.getElementById("factor-other").value.trim();
-    if (surveyData.downloadFactor.includes("อื่นๆ") && factorOther) {
-      surveyData.downloadFactor = `อื่นๆ: ${factorOther}`;
-    }
-    const pricingOther = document.getElementById("pricing-other").value.trim();
-    if (surveyData.pricingModel.includes("อื่นๆ") && pricingOther) {
-      surveyData.pricingModel = `อื่นๆ: ${pricingOther}`;
-    }
-  }
-
   if (!validateStep(step)) return;
 
-  const currentCard = document.querySelector(`.survey-step[data-step="${step}"]`);
-  const nextCard = document.querySelector(`.survey-step[data-step="${step + 1}"]`);
-
-  if (currentCard) currentCard.style.display = "none";
-  if (nextCard) {
-    nextCard.style.display = "block";
-    window.scrollTo({ top: 60, behavior: "smooth" });
+  const current = document.querySelector(`.survey-step[data-step="${step}"]`);
+  const next = document.querySelector(`.survey-step[data-step="${step + 1}"]`);
+  if (current) current.style.display = "none";
+  if (next) {
+    next.style.display = "block";
+    window.scrollTo({top: 80, behavior: "smooth"});
   }
-
-  currentStep = step + 1;
+  currentStep = Math.min(step + 1, totalSteps);
   updateProgress(currentStep);
 }
 
 function prevStep(step) {
-  const currentCard = document.querySelector(`.survey-step[data-step="${step}"]`);
-  const prevCard = document.querySelector(`.survey-step[data-step="${step - 1}"]`);
-
-  if (currentCard) currentCard.style.display = "none";
-  if (prevCard) {
-    prevCard.style.display = "block";
-    window.scrollTo({ top: 60, behavior: "smooth" });
+  const current = document.querySelector(`.survey-step[data-step="${step}"]`);
+  const prev = document.querySelector(`.survey-step[data-step="${step - 1}"]`);
+  if (current) current.style.display = "none";
+  if (prev) {
+    prev.style.display = "block";
+    window.scrollTo({top: 80, behavior: "smooth"});
   }
-
-  currentStep = step - 1;
+  currentStep = Math.max(step - 1, 1);
   updateProgress(currentStep);
 }
 
-// Submit Survey
 async function submitSurvey() {
   const submitBtn = document.getElementById("btn-submit");
+  const feedback = document.getElementById("actionable-feedback");
+  surveyData.actionableFeedback = feedback ? feedback.value.trim() : "";
 
-  const feedbackInput = document.getElementById("actionable-feedback");
-  surveyData.actionableFeedback = feedbackInput ? feedbackInput.value.trim() : "";
-  surveyData.timestamp = new Date().toLocaleString("th-TH", { timeZone: "Asia/Bangkok" });
+  if (!CONFIG.GOOGLE_SHEET_WEBHOOK_URL || !CONFIG.GOOGLE_SHEET_WEBHOOK_URL.trim()) {
+    alert("ยังไม่ได้ตั้งค่า Google Sheets Web App URL กรุณาแจ้งผู้ดูแลระบบก่อนครับ");
+    return;
+  }
+
+  surveyData.timestamp = new Date().toLocaleString("th-TH", {
+    timeZone: "Asia/Bangkok"
+  });
 
   submitBtn.disabled = true;
-  submitBtn.innerHTML = "<span>กำลังส่งคำตอบ...</span>";
+  submitBtn.innerText = "กำลังบันทึกข้อมูล...";
 
   try {
-    let localData = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_SURVEYS) || "[]");
-    localData.push(surveyData);
-    localStorage.setItem(CONFIG.STORAGE_KEY_SURVEYS, JSON.stringify(localData));
-  } catch (err) {
-    console.warn("Could not save to localStorage", err);
-  }
+    await fetch(CONFIG.GOOGLE_SHEET_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {"Content-Type": "text/plain;charset=utf-8"},
+      body: JSON.stringify(surveyData)
+    });
 
-  const webhookUrl = CONFIG.GOOGLE_SHEET_WEBHOOK_URL;
-  if (webhookUrl && webhookUrl.trim() !== "") {
-    try {
-      await fetch(webhookUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(surveyData)
-      });
-    } catch (netErr) {
-      console.warn("Google Sheets network submission handled:", netErr);
-    }
+    // no-cors does not expose the response, but the request has been sent.
+    document.getElementById("survey-form").style.display = "none";
+    document.getElementById("progress-wrapper").style.display = "none";
+    document.getElementById("hero-banner").style.display = "none";
+    document.getElementById("success-screen").style.display = "block";
+    window.scrollTo({top: 0, behavior: "smooth"});
+  } catch (error) {
+    console.error(error);
+    submitBtn.disabled = false;
+    submitBtn.innerText = "ส่งคำตอบแบบสอบถาม ✓";
+    alert("ไม่สามารถส่งข้อมูลได้ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้งครับ");
   }
-
-  document.getElementById("survey-form").style.display = "none";
-  document.getElementById("progress-wrapper").style.display = "none";
-  document.getElementById("hero-banner").style.display = "none";
-  document.getElementById("success-screen").style.display = "block";
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+updateProgress(1);

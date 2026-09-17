@@ -67,8 +67,7 @@
             <div class="option-item" onclick="selectSingle(this)"><div class="option-radio"></div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="status-other" placeholder="ระบุสถานภาพ" onclick="event.stopPropagation()"></div>
           </div>
         </div>
-        
-        <!-- 2 -->
+
         <div class="question-block">
           <p class="question-title">3. รูปแบบการอยู่อาศัยในปัจจุบันของท่านคือข้อใด? <span>*</span></p>
           <div class="options-list" data-name="livingType" data-required="true">
@@ -82,25 +81,24 @@
         <div class="step-actions"><button type="button" class="btn btn-primary" onclick="handleStep1Next()">ถัดไป →</button></div>
       </div>
 
-     <div class="question-block">
-  <p class="question-title">2. ท่านเคยประสบปัญหาเอกสารสำคัญสูญหาย หรือค้นหาไม่พบเมื่อต้องนำมาใช้งานด่วนหรือไม่ อย่างไร? <span>*</span></p>
-  <div class="options-list" data-name="lostDocExp" data-required="true">
-    
-    <!-- ตัวเลือก: ไม่เคยประสบปัญหา (ไม่ต้องมี input) -->
-    <div class="option-item" onclick="selectSingle(this)">
-      <div class="option-radio"></div>
-      <div class="option-text">ไม่เคยประสบปัญหา</div>
-    </div>
-    
-    <!-- ตัวเลือก: เคยประสบปัญหา (มี input และใส่ class="other-option" เพื่อให้ JS เช็คถูกตัว) -->
-    <div class="option-item other-option" onclick="selectSingle(this)">
-      <div class="option-radio"></div>
-      <div class="option-text">เคยประสบปัญหา</div>
-      <input type="text" class="inline-input" id="lost-doc-detail" placeholder="เช่น หา Transcript ไม่เจอตอนสัมภาษณ์งาน / ลืมสัญญาเช่า" onclick="event.stopPropagation()">
-    </div>
-    
-  </div>
-</div>
+      <!-- 2 -->
+      <div class="card survey-step" data-step="2" style="display:none;">
+        <span class="q-badge">ส่วนที่ 2 / 9</span>
+        <h3 class="q-title">Behavior & Pain Points</h3>
+        <p class="q-subtitle">สำรวจพฤติกรรมและความยุ่งยากเดิมจากการจัดการเอกสาร</p>
+
+        <div class="question-block">
+          <p class="question-title">1. ในช่วงสมัครงาน หรือเริ่มต้นทำงาน ท่านพบความยุ่งยากในการจัดการ "เอกสารประเภทใด" มากที่สุด? <span>*</span></p>
+          <p class="helper">(เลือกได้มากกว่า 1 ข้อ)</p>
+          <div class="options-list" data-name="painDocs" data-type="multi" data-required="true">
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารการศึกษา (เช่น Transcript, ใบคาดว่าจะจบ, ใบปริญญาบัตร)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารส่วนตัว/สัญญาเช่า (เช่น สำเนาบัตรประชาชน, ทะเบียนบ้าน, สัญญาเช่าหอ/คอนโด)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารการเงิน/บิลค่าใช้จ่าย (เช่น สลิปเงินเดือน, บิลค่าน้ำ/ค่าไฟ, สลิปโอนเงิน)</div></div>
+            <div class="option-item" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">เอกสารการสมัครงานอื่นๆ (เช่น Resume, พอร์ตโฟลิโอ, ใบรับรองการฝึกงาน)</div></div>
+            <div class="option-item other-option" onclick="selectMultiple(this)"><div class="option-checkbox">✓</div><div class="option-text">อื่นๆ</div><input type="text" class="inline-input" id="pain-other" placeholder="ระบุเอกสารอื่นๆ" onclick="event.stopPropagation()"></div>
+          </div>
+        </div>
+
         <div class="question-block">
           <p class="question-title">2. ท่านเคยประสบปัญหาเอกสารสำคัญสูญหาย หรือค้นหาไม่พบเมื่อต้องนำมาใช้งานด่วนหรือไม่ อย่างไร? <span>*</span></p>
           <div class="options-list" data-name="lostDocExp" data-required="true">
